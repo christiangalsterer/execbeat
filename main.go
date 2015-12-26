@@ -5,7 +5,7 @@ import (
 	execbeat "github.com/christiangalsterer/execbeat/beat"
 )
 
-var Version = "1.0.0-beta1"
+var Version = "1.0.0"
 var Name = "execbeat"
 
 func main() {
