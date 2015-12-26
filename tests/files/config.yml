@@ -1,0 +1,15 @@
+execbeat:
+
+   execs:
+    -
+      cron: "@every 1m"
+      command: echo1
+      args: "Execbeat"
+      fields:
+        foo1: bar1
+        foo2: bar2
+      document_type: exec
+    -
+      cron: "@every 2m"
+      command: echo2
+      args: "Hello World"
