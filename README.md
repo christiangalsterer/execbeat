@@ -13,11 +13,17 @@ This is often necessary in security restricted network setups, where Logstash is
 
 ## Configuration Options
 
+See [here](docs/configuration.asciidoc) for more information.
+
 ## Exported Document Types
 
 There is exactly one document type exported:
 
-- `type: execbeat` command execution information, e.g. standard output and standard error
+- `type: execbeat` command execution information, e.g. standard output and standard error. The type can be changed by setting the document_type attribute.
+
+## Exported Fields
+
+See [here](docs/fields.asciidoc) for a detailed description of all exported fields.
 
 ### execbeat type
 
