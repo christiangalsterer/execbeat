@@ -17,7 +17,7 @@ This is often necessary in security restricted network setups, where Logstash is
 
 There is exactly one document type exported:
 
-- `type: execbeat` http request and response information
+- `type: execbeat` command execution information, e.g. standard output and standard error
 
 ### execbeat type
 
