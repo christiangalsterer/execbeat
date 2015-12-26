@@ -1,8 +1,4 @@
-
-[[execbeat-configuration-details]]
 == Configuration Options
-
-Before modifying configuration settings, make sure you've read <<execbeat-configuration>>.
 
 The Execbeat configuration file uses http://yaml.org/[YAML] for its syntax.
 The file contains config options common to all Beats. These options are described
@@ -13,15 +9,10 @@ in the following sections of the {libbeat}/configuration.html[Beats Platform Ref
 * {libbeat}/configuration.html#configuration-logging[Logging (Optional)]
 * {libbeat}/configuration.html#configuration-run-options[Run Options (Optional)]
 
-The Execbeat config options are described here:
-
-* <<configuration-execbeat-options>>
-
-[[configuration-execbeat-options]]
 === Execbeat
 
 The `execbeat` section specifies a list of `execs` that Execbeat calls in a scheduled fashion.
-Each exec item begins with a dash (-) and specifies url-specific configuration options.
+Each exec item begins with a dash (-) and specifies command specific configuration options.
 
 Here is a sample configuration:
 
@@ -92,7 +83,6 @@ example, you might add fields that you can use for filtering log data.
 fields:
     level: debug
     review: 1
-
 -------------------------------------------------------------------------------------
 
 ===== document_type
@@ -100,3 +90,8 @@ fields:
 The event type to use for published lines read by harvesters. For Elasticsearch
 output, the value that you specify here is used to set the `type` field in the output
 document. The default value is `execbeat`.
+
+[source,yaml]
+-------------------------------------------------------------------------------------
+document_type: mytype
+-------------------------------------------------------------------------------------
