@@ -5,6 +5,7 @@ import (
 	"github.com/elastic/beats/libbeat/cfgfile"
 	"github.com/elastic/beats/libbeat/logp"
 	"github.com/elastic/beats/libbeat/publisher"
+	"time"
 )
 
 type Execbeat struct {
@@ -32,22 +33,30 @@ func (execBeat *Execbeat) Config(b *beat.Beat) error {
 
 func (execBeat *Execbeat) Setup(b *beat.Beat) error {
 	execBeat.events = b.Events
+	execBeat.done = make(chan struct{})
 
 	return nil
 }
 
-func (exexBeat *Execbeat) Run(b *beat.Beat) error {
+func (execBeat *Execbeat) Run(b *beat.Beat) error {
 	var err error
 
 	var poller *Executor
 
-	for i, exitConfig := range exexBeat.ExecConfig.Execbeat.Execs {
+	for i, exitConfig := range execBeat.ExecConfig.Execbeat.Execs {
 		logp.Debug("execbeat", "Creating poller # %v with command: %v", i, exitConfig.Command)
-		poller = NewExecutor(exexBeat, exitConfig)
+		poller = NewExecutor(execBeat, exitConfig)
 		go poller.Run()
 	}
 
+	ticker := time.NewTicker(3600 * time.Second)
+	defer ticker.Stop()
 	for {
+		select {
+			case <-execBeat.done:
+				return nil
+			case <-ticker.C:
+		}
 	}
 
 	return err
