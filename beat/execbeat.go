@@ -8,7 +8,7 @@ import (
 )
 
 type Execbeat struct {
-	done chan struct{}
+	done chan bool
 	ExecConfig ConfigSettings
 	events publisher.Client
 }
@@ -32,6 +32,7 @@ func (execBeat *Execbeat) Config(b *beat.Beat) error {
 
 func (execBeat *Execbeat) Setup(b *beat.Beat) error {
 	execBeat.events = b.Events
+	execBeat.done = make(chan bool)
 
 	return nil
 }
@@ -48,6 +49,10 @@ func (exexBeat *Execbeat) Run(b *beat.Beat) error {
 	}
 
 	for {
+		select {
+		case <-exexBeat.done:
+			return nil
+		}
 	}
 
 	return err
