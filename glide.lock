@@ -1,5 +1,5 @@
 hash: 0badc8a19caa4b2963d738684f00d4d15668c9a20eb5e04fb496bf11609c6310
-updated: 2016-07-17T16:12:50.417666994+02:00
+updated: 2016-07-17T17:42:46.197567064+02:00
 imports:
 - name: github.com/elastic/beats
   version: e849e45f713a6112145ac8309fc23bd69bc41ef8
@@ -40,7 +40,7 @@ testImports:
   subpackages:
   - spew
 - name: github.com/pmezard/go-difflib
-  version: 792786c7400a136282c1664665ae0a8db921c6c2
+  version: d8ed2627bdf02c080bf22230dbb337003b7aba2d
   subpackages:
   - difflib
 - name: github.com/stretchr/testify
