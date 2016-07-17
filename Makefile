@@ -29,10 +29,11 @@ gofmt:
 
 .PHONY: cover
 cover:
-	echo 'mode: atomic' > coverage.txt && glide novendor | xargs -n1 -I{} sh -c 'go test -covermode=atomic -coverprofile=coverage.tmp {} && tail -n +2 coverage.tmp >> coverage.txt' && rm coverage.tmp
+	echo 'mode: atomic' > coverage.txt && go list . ./beat | xargs -n1 -I{} sh -c 'go test -covermode=atomic -coverprofile=coverage.tmp {} && tail -n +2 coverage.tmp >> coverage.txt' && rm coverage.tmp
 
 .PHONY: clean
 clean:
 	rm -r cover || true
 	rm profile.cov || true
 	rm execbeat || true
+	rm coverage.txt || true
