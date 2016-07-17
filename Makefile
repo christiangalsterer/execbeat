@@ -3,7 +3,6 @@ PREFIX?=/build
 
 #GOFILES = $(shell find . -type f -name '*.go')
 execbeat:
-	glide up
 	go build $(glide novendor)
 
 .PHONY: getdeps
