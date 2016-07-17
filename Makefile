@@ -29,11 +29,7 @@ gofmt:
 
 .PHONY: cover
 cover:
-	# gotestcover is needed to fetch coverage for multiple packages
-	go get github.com/pierrre/gotestcover
-	GOPATH=$(GOPATH) $(GOPATH)/bin/gotestcover -coverprofile=profile.cov -covermode=count github.com/christiangalsterer/execbeat/. github.com/christiangalsterer/execbeat/beat/...
-	mkdir -p cover
-	go tool cover -html=profile.cov -o cover/coverage.html
+	echo 'mode: atomic' > coverage.txt && glide novendor | xargs -n1 -I{} sh -c 'go test -covermode=atomic -coverprofile=coverage.tmp {} && tail -n +2 coverage.tmp >> coverage.txt' && rm coverage.tmp
 
 .PHONY: clean
 clean:
