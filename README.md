@@ -17,6 +17,7 @@ This is often necessary in security restricted network setups, where Logstash is
 * Using Glide for dependency management
 
 1.0.1 (2016-02-15)
+
 Bugfix release, contains the following fixes
 * [Hanging during shutdown](https://github.com/christiangalsterer/execbeat/issues/2)
 
