@@ -1,0 +1,11 @@
+package: github.com/christiangalsterer/execbeat
+import:
+- package: github.com/elastic/beats
+  version: v1.2.3
+  subpackages:
+  - libbeat/beat
+  - libbeat/cfgfile
+  - libbeat/logp
+  - libbeat/publisher
+- package: github.com/robfig/cron
+  version: 6f2e8282a1a0d694e55a48ce7d077ee46747feeb

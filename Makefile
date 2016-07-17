@@ -1,23 +1,22 @@
 GODEP=$(GOPATH)/bin/godep
 PREFIX?=/build
 
-GOFILES = $(shell find . -type f -name '*.go')
-execbeat: $(GOFILES)
-	# first make sure we have godep
-	go get github.com/tools/godep
-	$(GODEP) go build
+#GOFILES = $(shell find . -type f -name '*.go')
+execbeat:
+	glide up
+	go build $(glide novendor)
 
 .PHONY: getdeps
 getdeps:
-	go get -t -u -f
+	glide up
 
 .PHONY: test
 test:
-	$(GODEP) go test ./...
+	go test . ./beat/...
 
 .PHONY: updatedeps
 updatedeps:
-	$(GODEP) update ...
+	glide up
 
 .PHONY: install_cfg
 install_cfg:

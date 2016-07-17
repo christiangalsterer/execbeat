@@ -9,6 +9,20 @@ Multiple commands can be configured which are executed in a regular interval and
 Execbeat is inspired by the Logstash [exec](https://www.elastic.co/guide/en/logstash/current/plugins-inputs-exec.html) input filter but doesn't require that the endpoint is reachable by Logstash as Execbeat pushes the data to Logstash or Elasticsearch.
 This is often necessary in security restricted network setups, where Logstash is not able to reach all servers. Instead the server to be monitored itself has Execbeat installed and can send the data or a collector server has Execbeat installed which is deployed in the secured network environment and can reach all servers to be monitored.
 
+# Releases
+
+1.1.0 (Work in Progress)
+* Update to Go 1.6
+* Update to libbeat 1.2.3
+* Using Glide for dependency management
+
+1.0.1 (2016-02-15)
+Bugfix release, contains the following fixes
+* [Hanging during shutdown](https://github.com/christiangalsterer/execbeat/issues/2)
+
+1.0.0 (2015-12-26)
+Initial release
+
 # Configuration
 
 ## Configuration Options
@@ -64,6 +78,10 @@ To apply the Execbeat template:
     curl -XPUT 'http://localhost:9200/_template/execbeat' -d@etc/execbeat.template.json
 
 # Build, Test, Run
+
+Prerequisites:
+* Go 1.6
+* Glide: Execbeat uses Glide for dependency management. To install glide see: https://github.com/Masterminds/glide
 
 ```
 # Build
