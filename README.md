@@ -14,7 +14,7 @@ This is often necessary in security restricted network setups, where Logstash is
 1.1.0 (Work in Progress)
 * Update to Go 1.6
 * Update to libbeat 1.2.3
-* Using Glide for dependency management
+* Using [Glide](https://github.com/Masterminds/glide) for dependency management
 
 1.0.1 (2016-02-15)
 
