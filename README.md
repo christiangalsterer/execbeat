@@ -21,7 +21,7 @@ Bugfix release, contains the following fixes
 * [Hanging during shutdown](https://github.com/christiangalsterer/execbeat/issues/2)
 
 1.0.0 (2015-12-26)
-Initial release
+* Initial release
 
 # Configuration
 

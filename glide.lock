@@ -1,0 +1,49 @@
+hash: 0badc8a19caa4b2963d738684f00d4d15668c9a20eb5e04fb496bf11609c6310
+updated: 2016-07-17T16:12:50.417666994+02:00
+imports:
+- name: github.com/elastic/beats
+  version: e849e45f713a6112145ac8309fc23bd69bc41ef8
+  subpackages:
+  - libbeat/beat
+  - libbeat/cfgfile
+  - libbeat/logp
+  - libbeat/publisher
+  - libbeat/common
+  - libbeat/outputs
+  - libbeat/service
+  - libbeat/outputs/console
+  - libbeat/outputs/elasticsearch
+  - libbeat/outputs/fileout
+  - libbeat/outputs/logstash
+  - libbeat/outputs/redis
+  - libbeat/outputs/mode
+- name: github.com/garyburd/redigo
+  version: b8dc90050f24c1a73a52f107f3f575be67b21b7c
+  subpackages:
+  - redis
+  - internal
+- name: github.com/nranchev/go-libGeoIP
+  version: c78e8bd2dd3599feb21fd30886043979e82fe948
+- name: github.com/robfig/cron
+  version: 6f2e8282a1a0d694e55a48ce7d077ee46747feeb
+- name: golang.org/x/sys
+  version: a646d33e2ee3172a661fc09bca23bb4889a41bc8
+  subpackages:
+  - windows/svc
+  - windows/svc/debug
+  - windows
+- name: gopkg.in/yaml.v2
+  version: e4d366fc3c7938e2958e662b4258c7a89e1f0e3e
+testImports:
+- name: github.com/davecgh/go-spew
+  version: 5215b55f46b2b919f50a1df0eaa5886afe4e3b3d
+  subpackages:
+  - spew
+- name: github.com/pmezard/go-difflib
+  version: 792786c7400a136282c1664665ae0a8db921c6c2
+  subpackages:
+  - difflib
+- name: github.com/stretchr/testify
+  version: d77da356e56a7428ad25149ca77381849a6a5232
+  subpackages:
+  - assert
