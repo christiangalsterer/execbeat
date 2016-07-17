@@ -1,6 +1,3 @@
-GODEP=$(GOPATH)/bin/godep
-PREFIX?=/build
-
 #GOFILES = $(shell find . -type f -name '*.go')
 execbeat:
 	go build
@@ -34,9 +31,9 @@ gofmt:
 cover:
 	# gotestcover is needed to fetch coverage for multiple packages
 	go get github.com/pierrre/gotestcover
-	GOPATH=$(shell $(GODEP) path):$(GOPATH) $(GOPATH)/bin/gotestcover -coverprofile=profile.cov -covermode=count github.com/christiangalsterer/execbeat/...
+	GOPATH=$(GOPATH) $(GOPATH)/bin/gotestcover -coverprofile=profile.cov -covermode=count github.com/christiangalsterer/execbeat/. github.com/christiangalsterer/execbeat/beat/...
 	mkdir -p cover
-	$(GODEP) go tool cover -html=profile.cov -o cover/coverage.html
+	go tool cover -html=profile.cov -o cover/coverage.html
 
 .PHONY: clean
 clean:
