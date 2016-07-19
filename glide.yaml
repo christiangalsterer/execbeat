@@ -1,4 +1,9 @@
 package: github.com/christiangalsterer/execbeat
+homepage: https://github.com/christiangalsterer/execbeat
+license: Apache-2.0
+owners:
+- name: Christian Galsterer
+  homepage: https://github.com/christiangalsterer
 import:
 - package: github.com/elastic/beats
   version: v1.2.3
@@ -8,4 +13,4 @@ import:
   - libbeat/logp
   - libbeat/publisher
 - package: github.com/robfig/cron
-  version: 6f2e8282a1a0d694e55a48ce7d077ee46747feeb
+  version: v1

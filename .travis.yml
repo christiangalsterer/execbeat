@@ -11,13 +11,13 @@ before_install:
   - rsync -az ${TRAVIS_BUILD_DIR}/ $HOME/gopath/src/github.com/christiangalsterer/execbeat/
   - export TRAVIS_BUILD_DIR=$HOME/gopath/src/github.com/christiangalsterer/execbeat
   - cd $HOME/gopath/src/github.com/christiangalsterer/execbeat
-  #- go get github.com/stretchr/testify/...
 
 install:
   - make
 
 script:
   - make cover
+
 after_success:
   # Copy profile.cov to coverage.txt because codecov.io requires this file
   - cp profile.cov coverage.txt

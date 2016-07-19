@@ -1,5 +1,5 @@
-hash: 0badc8a19caa4b2963d738684f00d4d15668c9a20eb5e04fb496bf11609c6310
-updated: 2016-07-17T18:13:26.217508523+02:00
+hash: 1af632fb8d7140718aae4725d3557c6a760f69c960112db66db6c2348487a969
+updated: 2016-07-19T07:30:25.069840586+02:00
 imports:
 - name: github.com/elastic/beats
   version: e849e45f713a6112145ac8309fc23bd69bc41ef8
@@ -25,7 +25,7 @@ imports:
 - name: github.com/nranchev/go-libGeoIP
   version: c78e8bd2dd3599feb21fd30886043979e82fe948
 - name: github.com/robfig/cron
-  version: 6f2e8282a1a0d694e55a48ce7d077ee46747feeb
+  version: b024fc5ea0e34bc3f83d9941c8d60b0622bfaca4
 - name: golang.org/x/sys
   version: a646d33e2ee3172a661fc09bca23bb4889a41bc8
   subpackages:
@@ -40,7 +40,7 @@ testImports:
   subpackages:
   - spew
 - name: github.com/pmezard/go-difflib
-  version: 792786c7400a136282c1664665ae0a8db921c6c2
+  version: d8ed2627bdf02c080bf22230dbb337003b7aba2d
   subpackages:
   - difflib
 - name: github.com/stretchr/testify

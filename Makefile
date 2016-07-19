@@ -1,10 +1,9 @@
-#GOFILES = $(shell find . -type f -name '*.go')
 execbeat:
 	go build
 
 .PHONY: getdeps
 getdeps:
-	glide up
+	glide up --strip-vcs --update-vendored
 
 .PHONY: test
 test:
@@ -12,7 +11,7 @@ test:
 
 .PHONY: updatedeps
 updatedeps:
-	glide up
+	glide up --strip-vcs --update-vendored
 
 .PHONY: install_cfg
 install_cfg:

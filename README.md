@@ -11,15 +11,17 @@ This is often necessary in security restricted network setups, where Logstash is
 
 # Releases
 
-1.1.0 (Work in Progress)
+1.1.0 (2016-07-19)
+
+Feature release containing the following changes:
 * Update to Go 1.6
 * Update to libbeat 1.2.3
-* Using [Glide](https://github.com/Masterminds/glide) for dependency management
+* Use [Glide](https://github.com/Masterminds/glide) for dependency management
 
 1.0.1 (2016-02-15)
 
-Bugfix release, contains the following fixes
-* [Hanging during shutdown](https://github.com/christiangalsterer/execbeat/issues/2)
+Bugfix release containing the following changes:
+* Fix: [Hanging during shutdown](https://github.com/christiangalsterer/execbeat/issues/2)
 
 1.0.0 (2015-12-26)
 * Initial release
