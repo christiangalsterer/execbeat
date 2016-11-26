@@ -1,5 +1,6 @@
 [![Build Status](https://travis-ci.org/christiangalsterer/execbeat.svg?branch=master)](https://travis-ci.org/christiangalsterer/execbeat)
 [![codecov.io](http://codecov.io/github/christiangalsterer/execbeat/coverage.svg?branch=master)](http://codecov.io/github/christiangalsterer/execbeat?branch=master)
+[![Go Report Card](https://goreportcard.com/badge/github.com/christiangalsterer/execbeat)](https://goreportcard.com/report/github.com/christiangalsterer/execbeat)
 
 # Overview
 
