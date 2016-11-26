@@ -48,8 +48,6 @@ func (exexBeat *Execbeat) Run(b *beat.Beat) error {
 			return nil
 		}
 	}
-
-	return err
 }
 
 func (execBeat *Execbeat) Cleanup(b *beat.Beat) error {
