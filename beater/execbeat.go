@@ -31,7 +31,6 @@ func New(b *beat.Beat, cfg *common.Config) (beat.Beater, error) {
 }
 
 func (exexBeat *Execbeat) Run(b *beat.Beat) error {
-	var err error
 	var poller *Executor
 	logp.Info("execbeat is running! Hit CTRL-C to stop it.")
 	exexBeat.client = b.Publisher.Connect()
