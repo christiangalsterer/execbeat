@@ -1,7 +1,7 @@
-from pbtests.packetbeat import TestCase
+from packetbeat import BaseTest
 
 
-class Test(TestCase):
+class Test(BaseTest):
 
     def test_http_sample(self):
         self.render_config_template(http_ports=['8000'])
@@ -11,9 +11,10 @@ class Test(TestCase):
 
         assert len(objs) == 1
         obj = objs[0]
+
         assert obj["status"] == "OK"
-        assert obj["http.content_length"] == 11422
-        assert obj["http.code"] == 200
+        assert obj["http.response.headers"]["content-length"] == 11422
+        assert obj["http.response.code"] == 200
         assert obj["type"] == "http"
         assert obj["client_ip"] == "127.0.0.1"
         assert obj["client_port"] == 37885

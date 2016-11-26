@@ -1,14 +1,16 @@
+// +build !integration
+
 package publisher
 
 import (
 	"testing"
 
-	"github.com/elastic/beats/libbeat/common"
-	"github.com/elastic/beats/libbeat/logp"
+	"github.com/elastic/beats/libbeat/outputs"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestSyncPublishEventSuccess(t *testing.T) {
+	enableLogging([]string{"*"})
 	testPub := newTestPublisherNoBulk(CompletedResponse)
 	event := testEvent()
 
@@ -18,21 +20,21 @@ func TestSyncPublishEventSuccess(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	assert.Equal(t, event, msgs[0].event)
+	assert.Equal(t, event, msgs[0].datum)
 }
 
 func TestSyncPublishEventsSuccess(t *testing.T) {
 	testPub := newTestPublisherNoBulk(CompletedResponse)
-	events := []common.MapStr{testEvent(), testEvent()}
+	data := []outputs.Data{testEvent(), testEvent()}
 
-	assert.True(t, testPub.syncPublishEvents(events))
+	assert.True(t, testPub.syncPublishEvents(data))
 
 	msgs, err := testPub.outputMsgHandler.waitForMessages(1)
 	if err != nil {
 		t.Fatal(err)
 	}
-	assert.Equal(t, events[0], msgs[0].events[0])
-	assert.Equal(t, events[1], msgs[0].events[1])
+	assert.Equal(t, data[0], msgs[0].data[0])
+	assert.Equal(t, data[1], msgs[0].data[1])
 }
 
 func TestSyncPublishEventFailed(t *testing.T) {
@@ -45,29 +47,25 @@ func TestSyncPublishEventFailed(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	assert.Equal(t, event, msgs[0].event)
+	assert.Equal(t, event, msgs[0].datum)
 }
 
 func TestSyncPublishEventsFailed(t *testing.T) {
 	testPub := newTestPublisherNoBulk(FailedResponse)
-	events := []common.MapStr{testEvent(), testEvent()}
+	data := []outputs.Data{testEvent(), testEvent()}
 
-	assert.False(t, testPub.syncPublishEvents(events))
+	assert.False(t, testPub.syncPublishEvents(data))
 
 	msgs, err := testPub.outputMsgHandler.waitForMessages(1)
 	if err != nil {
 		t.Fatal(err)
 	}
-	assert.Equal(t, events[0], msgs[0].events[0])
-	assert.Equal(t, events[1], msgs[0].events[1])
+	assert.Equal(t, data[0], msgs[0].data[0])
+	assert.Equal(t, data[1], msgs[0].data[1])
 }
 
 // Test that PublishEvent returns true when publishing is disabled.
 func TestSyncPublisherDisabled(t *testing.T) {
-	if testing.Verbose() {
-		logp.LogInit(logp.LOG_DEBUG, "", false, true, []string{"*"})
-	}
-
 	testPub := newTestPublisherNoBulk(FailedResponse)
 	testPub.pub.disabled = true
 	event := testEvent()

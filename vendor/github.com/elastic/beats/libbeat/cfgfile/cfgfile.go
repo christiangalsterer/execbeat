@@ -3,154 +3,136 @@ package cfgfile
 import (
 	"flag"
 	"fmt"
-	"io/ioutil"
 	"os"
 	"path/filepath"
-	"strings"
 
-	"github.com/elastic/beats/libbeat/logp"
-	"gopkg.in/yaml.v2"
+	"github.com/elastic/beats/libbeat/common"
 )
 
-// Command line flags
-var configfile *string
-var testConfig *bool
+// Command line flags.
+var (
+	// The default config cannot include the beat name as it is not initialized
+	// when this variable is created. See ChangeDefaultCfgfileFlag which should
+	// be called prior to flags.Parse().
+	configfiles = flagArgList("c", "beat.yml", "Configuration file, relative to path.config")
+	overwrites  = common.NewFlagConfig(nil, nil, "E", "Configuration overwrite")
+	testConfig  = flag.Bool("configtest", false, "Test configuration and exit.")
+
+	// Additional default settings, that must be available for variable expansion
+	defaults = mustNewConfigFrom(map[string]interface{}{
+		"path": map[string]interface{}{
+			"home":   ".", // to be initialized by beat
+			"config": "${path.home}",
+			"data":   fmt.Sprint("${path.home}", string(os.PathSeparator), "data"),
+			"logs":   fmt.Sprint("${path.home}", string(os.PathSeparator), "logs"),
+		},
+	})
+
+	// home-path CLI flag (initialized in init)
+	homePath   *string
+	configPath *string
+)
 
 func init() {
-	// The default config cannot include the beat name as it is not initialised when this
-	// function is called, but see ChangeDefaultCfgfileFlag
-	configfile = flag.String("c", "beat.yml", "Configuration file")
-	testConfig = flag.Bool("configtest", false, "Test configuration and exit.")
+	// add '-path.x' options overwriting paths in 'overwrites' config
+	makePathFlag := func(name, usage string) *string {
+		return common.NewFlagOverwrite(nil, overwrites, name, name, "", usage)
+	}
+
+	homePath = makePathFlag("path.home", "Home path")
+	configPath = makePathFlag("path.config", "Configuration path")
+	makePathFlag("path.data", "Data path")
+	makePathFlag("path.logs", "Logs path")
 }
 
-// ChangeDefaultCfgfileFlag replaces the value and default value for the `-c` flag so that
-// it reflects the beat name.
+func mustNewConfigFrom(from interface{}) *common.Config {
+	cfg, err := common.NewConfigFrom(from)
+	if err != nil {
+		panic(err)
+	}
+	return cfg
+}
+
+// ChangeDefaultCfgfileFlag replaces the value and default value for the `-c`
+// flag so that it reflects the beat name.
 func ChangeDefaultCfgfileFlag(beatName string) error {
-	cliflag := flag.Lookup("c")
-	if cliflag == nil {
-		return fmt.Errorf("Flag -c not found")
-	}
-
-	path, err := filepath.Abs(filepath.Dir(os.Args[0]))
-	if err != nil {
-		return fmt.Errorf("Failed to set default config file location because "+
-			"the absolute path to %s could not be obtained. %v",
-			os.Args[0], err)
-	}
-
-	cliflag.DefValue = filepath.Join(path, beatName+".yml")
-
-	return cliflag.Value.Set(cliflag.DefValue)
-}
-
-// Read reads the configuration from a yaml file into the given interface structure.
-// In case path is not set this method reads from the default configuration file for the beat.
-func Read(out interface{}, path string) error {
-
-	if path == "" {
-		path = *configfile
-	}
-
-	filecontent, err := ioutil.ReadFile(path)
-	if err != nil {
-		return fmt.Errorf("Failed to read %s: %v. Exiting.", path, err)
-	}
-
-	filecontent = expandEnv(filecontent)
-
-	if err = yaml.Unmarshal(filecontent, out); err != nil {
-		return fmt.Errorf("YAML config parsing failed on %s: %v. Exiting.", path, err)
-	}
-
+	configfiles.SetDefault(beatName + ".yml")
 	return nil
 }
 
-func IsTestConfig() bool {
-	return *testConfig
-}
+// HandleFlags adapts default config settings based on command line flags.
+func HandleFlags() error {
 
-// expandEnv replaces ${var} in config according to the values of the current
-// environment variables. The replacement is case-sensitive. References to
-// undefined variables are replaced by the empty string. A default value can be
-// given by using the form ${var:default value}.
-func expandEnv(config []byte) []byte {
-	return []byte(expand(string(config), func(key string) string {
-		keyAndDefault := strings.SplitN(key, ":", 2)
-		key = keyAndDefault[0]
-
-		v := os.Getenv(key)
-		if v == "" && len(keyAndDefault) == 2 {
-			// Set value to the default.
-			v = keyAndDefault[1]
-			logp.Info("Replacing config environment variable '${%s}' with "+
-				"default '%s'", key, keyAndDefault[1])
-		} else {
-			logp.Info("Replacing config environment variable '${%s}' with '%s'",
-				key, v)
+	// default for the home path is the binary location
+	home, err := filepath.Abs(filepath.Dir(os.Args[0]))
+	if err != nil {
+		if *homePath == "" {
+			return fmt.Errorf("The absolute path to %s could not be obtained. %v",
+				os.Args[0], err)
 		}
-
-		return v
-	}))
-}
-
-// The following methods were copied from the os package of the stdlib. The
-// expand method was modified to only expand variables defined with braces and
-// ignore $var.
-
-// Expand replaces ${var} in the string based on the mapping function.
-func expand(s string, mapping func(string) string) string {
-	buf := make([]byte, 0, 2*len(s))
-	// ${} is all ASCII, so bytes are fine for this operation.
-	i := 0
-	for j := 0; j < len(s); j++ {
-		if s[j] == '$' && j+2 < len(s) && s[j+1] == '{' {
-			buf = append(buf, s[i:j]...)
-			name, w := getShellName(s[j+1:])
-			buf = append(buf, mapping(name)...)
-			j += w
-			i = j + 1
-		}
+		home = *homePath
 	}
-	return string(buf) + s[i:]
+
+	defaults.SetString("path.home", -1, home)
+	return nil
 }
 
-// isShellSpecialVar reports whether the character identifies a special
-// shell variable such as $*.
-func isShellSpecialVar(c uint8) bool {
-	switch c {
-	case '*', '#', '$', '@', '!', '?', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9':
-		return true
+// Deprecated: Please use Load().
+//
+// Read reads the configuration from a YAML file into the given interface
+// structure. If path is empty this method reads from the configuration
+// file specified by the '-c' command line flag.
+func Read(out interface{}, path string) error {
+	config, err := Load(path)
+	if err != nil {
+		return nil
 	}
-	return false
+
+	return config.Unpack(out)
 }
 
-// isAlphaNum reports whether the byte is an ASCII letter, number, or underscore
-func isAlphaNum(c uint8) bool {
-	return c == '_' || '0' <= c && c <= '9' || 'a' <= c && c <= 'z' || 'A' <= c && c <= 'Z'
-}
+// Load reads the configuration from a YAML file structure. If path is empty
+// this method reads from the configuration file specified by the '-c' command
+// line flag.
+func Load(path string) (*common.Config, error) {
+	var config *common.Config
+	var err error
 
-// getShellName returns the name that begins the string and the number of bytes
-// consumed to extract it.  If the name is enclosed in {}, it's part of a ${}
-// expansion and two more bytes are needed than the length of the name.
-func getShellName(s string) (string, int) {
-	switch {
-	case s[0] == '{':
-		if len(s) > 2 && isShellSpecialVar(s[1]) && s[2] == '}' {
-			return s[1:2], 3
-		}
-		// Scan to closing brace
-		for i := 1; i < len(s); i++ {
-			if s[i] == '}' {
-				return s[1:i], i + 1
+	cfgpath := ""
+	if *configPath != "" {
+		cfgpath = *configPath
+	} else if *homePath != "" {
+		cfgpath = *homePath
+	}
+
+	if path == "" {
+		list := []string{}
+		for _, cfg := range configfiles.list {
+			if !filepath.IsAbs(cfg) {
+				list = append(list, filepath.Join(cfgpath, cfg))
+			} else {
+				list = append(list, cfg)
 			}
 		}
-		return "", 1 // Bad syntax; just eat the brace.
-	case isShellSpecialVar(s[0]):
-		return s[0:1], 1
+		config, err = common.LoadFiles(list...)
+	} else {
+		if !filepath.IsAbs(path) {
+			path = filepath.Join(cfgpath, path)
+		}
+		config, err = common.LoadFile(path)
 	}
-	// Scan alphanumerics.
-	var i int
-	for i = 0; i < len(s) && isAlphaNum(s[i]); i++ {
+	if err != nil {
+		return nil, err
 	}
-	return s[:i], i
+
+	return common.MergeConfigs(
+		defaults,
+		config,
+		overwrites,
+	)
+}
+
+// IsTestConfig returns whether or not this is configuration used for testing
+func IsTestConfig() bool {
+	return *testConfig
 }

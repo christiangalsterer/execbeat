@@ -1,11 +1,11 @@
-from pbtests.packetbeat import TestCase
+from packetbeat import BaseTest
 
 """
 Tests for checking the hide_keywords options.
 """
 
 
-class Test(TestCase):
+class Test(BaseTest):
 
     def test_http_hide_post(self):
         """
@@ -22,7 +22,7 @@ class Test(TestCase):
         assert len(objs) == 1
         o = objs[0]
         assert o["type"] == "http"
-        assert o["params"] == "pass=xxxxx&user=monica"
+        assert o["http.request.params"] == "pass=xxxxx&user=monica"
         assert o["path"] == "/login"
         for _, val in o.items():
             if isinstance(val, basestring):
@@ -43,7 +43,7 @@ class Test(TestCase):
         assert len(objs) == 1
         o = objs[0]
         assert o["type"] == "http"
-        assert o["params"] == "pass=xxxxx&user=monica"
+        assert o["http.request.params"] == "pass=xxxxx&user=monica"
         assert o["path"] == "/login"
         for _, val in o.items():
             if isinstance(val, basestring):
@@ -61,5 +61,5 @@ class Test(TestCase):
         assert len(objs) == 1
         o = objs[0]
         assert o["type"] == "http"
-        assert o["params"] == "pass=secret&user=monica"
+        assert o["http.request.params"] == "pass=secret&user=monica"
         assert o["path"] == "/login"

@@ -1,21 +1,20 @@
 filebeat:
   prospectors:
-    -
+    - input_type: log
       paths:
         - /Users/ruflin/Dev/gopath/src/github.com/elastic/filebeat/tests/load/logs/*
-      input_type: log
 
       #fields:
       #  level: debug
       #  review: 1
       ignore_older: 0
-      close_older: 1h
+      close_inactive: 5m
       scan_frequency: 0s
       harvester_buffer_size: 1000000
 
   spool_size: 4096
   idle_timeout: 5s
-  registry_file: .filebeat
+  registry_file: registry
 
 
 ############################# Output ##########################################

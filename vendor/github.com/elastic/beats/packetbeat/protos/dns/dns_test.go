@@ -1,3 +1,5 @@
+// +build !integration
+
 // Common variables, functions and tests for the dns package tests
 
 package dns
@@ -14,6 +16,7 @@ import (
 
 	"github.com/elastic/beats/libbeat/common"
 	"github.com/elastic/beats/libbeat/logp"
+	mkdns "github.com/miekg/dns"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -35,6 +38,7 @@ type DnsTestMessage struct {
 	q_class     string
 	q_type      string
 	q_name      string
+	q_etld      string
 	answers     []string
 	authorities []string
 	additionals []string
@@ -59,18 +63,20 @@ func newDns(verbose bool) *Dns {
 		logp.LogInit(logp.LOG_EMERG, "", false, true, []string{"dns"})
 	}
 
-	dns := &Dns{}
-	err := dns.Init(true, &publish.ChanTransactions{make(chan common.MapStr, 100)})
+	results := &publish.ChanTransactions{make(chan common.MapStr, 100)}
+	cfg, _ := common.NewConfigFrom(map[string]interface{}{
+		"ports":               []int{ServerPort},
+		"include_authorities": true,
+		"include_additionals": true,
+		"send_request":        true,
+		"send_response":       true,
+	})
+	dns, err := New(false, results, cfg)
 	if err != nil {
-		return nil
+		panic(err)
 	}
 
-	dns.Ports = []int{ServerPort}
-	dns.Include_authorities = true
-	dns.Include_additionals = true
-	dns.Send_request = true
-	dns.Send_response = true
-	return dns
+	return dns.(*Dns)
 }
 
 func newPacket(t common.IpPortTuple, payload []byte) *protos.Packet {
@@ -211,6 +217,7 @@ func assertRequest(t testing.TB, m common.MapStr, q DnsTestMessage) {
 	assert.Equal(t, q.q_class, mapValue(t, m, "dns.question.class"))
 	assert.Equal(t, q.q_type, mapValue(t, m, "dns.question.type"))
 	assert.Equal(t, q.q_name, mapValue(t, m, "dns.question.name"))
+	assert.Equal(t, q.q_etld, mapValue(t, m, "dns.question.etld_plus_one"))
 }
 
 // Assert that the specified flags are set.
@@ -222,8 +229,12 @@ func assertFlags(t testing.TB, m common.MapStr, flags []string) {
 			t.Fatalf("Unknown flag '%s' specified in test.", expected)
 		case "aa":
 			key = "dns.flags.authoritative"
+		case "ad":
+			key = "dns.flags.authentic_data"
+		case "cd":
+			key = "dns.flags.checking_disabled"
 		case "ra":
-			key = "dns.flags.recursion_allowed"
+			key = "dns.flags.recursion_available"
 		case "rd":
 			key = "dns.flags.recursion_desired"
 		case "tc":
@@ -252,9 +263,26 @@ func assertAddress(t testing.TB, expected common.IpPortTuple, endpoint interface
 	assert.Equal(t, expected.Src_port, e.Port)
 }
 
-// Verify that nameToString encodes non-printable characters.
-func Test_nameToString_encodesNonPrintable(t *testing.T) {
-	name := "\n \r \t \" \\ \u2318.dnstunnel.com"
-	escapedName := "\\n \\r \\t \\\" \\\\ \\226\\140\\152.dnstunnel.com"
-	assert.Equal(t, escapedName, nameToString([]byte(name)))
+func TestRRsToMapStrsWithOPTRecord(t *testing.T) {
+	o := new(mkdns.OPT)
+	o.Hdr.Name = "." // MUST be the root zone, per definition.
+	o.Hdr.Rrtype = mkdns.TypeOPT
+
+	r := new(mkdns.MX)
+	r.Hdr = mkdns.RR_Header{Name: "miek.nl.", Rrtype: mkdns.TypeMX,
+		Class: mkdns.ClassINET, Ttl: 3600}
+	r.Preference = 10
+	r.Mx = "mx.miek.nl."
+
+	// The OPT record is a psuedo-record so it doesn't become a real record
+	// in our conversion, and there will be 1 entry instead of 2.
+	mapStrs := rrsToMapStrs([]mkdns.RR{o, r})
+	assert.Len(t, mapStrs, 1)
+
+	mapStr := mapStrs[0]
+	assert.Equal(t, "IN", mapStr["class"])
+	assert.Equal(t, "MX", mapStr["type"])
+	assert.Equal(t, "mx.miek.nl.", mapStr["data"])
+	assert.Equal(t, "miek.nl.", mapStr["name"])
+	assert.EqualValues(t, 10, mapStr["preference"])
 }

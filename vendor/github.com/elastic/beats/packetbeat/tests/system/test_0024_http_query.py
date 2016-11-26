@@ -1,11 +1,11 @@
-from pbtests.packetbeat import TestCase
+from packetbeat import BaseTest
 
 """
 Tests for checking that HTTP query is filled.
 """
 
 
-class Test(TestCase):
+class Test(BaseTest):
 
     def test_http_post(self):
         """
@@ -34,4 +34,4 @@ class Test(TestCase):
         o = objs[0]
         assert o["type"] == "http"
         assert o["query"] == "GET /dashboard/transactions"
-        assert o["params"] == "input=packetbeat&src_ip=192.35.243.1"
+        assert o["http.request.params"] == "input=packetbeat&src_ip=192.35.243.1"

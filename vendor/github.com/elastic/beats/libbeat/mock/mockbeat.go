@@ -1,36 +1,49 @@
 package mock
 
 import (
-	"fmt"
+	"time"
 
 	"github.com/elastic/beats/libbeat/beat"
+	"github.com/elastic/beats/libbeat/common"
+	"github.com/elastic/beats/libbeat/logp"
+	"github.com/elastic/beats/libbeat/publisher"
 )
 
 ///*** Mock Beat Setup ***///
 
-var Version = "0.0.1"
+var Version = "9.9.9"
 var Name = "mockbeat"
 
 type Mockbeat struct {
+	done   chan struct{}
+	client publisher.Client
 }
 
-func (mb *Mockbeat) Config(b *beat.Beat) error {
-	fmt.Print("hello world")
-	return nil
+// Creates beater
+func New(b *beat.Beat, _ *common.Config) (beat.Beater, error) {
+	return &Mockbeat{
+		done: make(chan struct{}),
+	}, nil
 }
 
-func (mb *Mockbeat) Setup(b *beat.Beat) error {
-	return nil
-}
+/// *** Beater interface methods ***///
 
 func (mb *Mockbeat) Run(b *beat.Beat) error {
-	return nil
-}
+	mb.client = b.Publisher.Connect()
 
-func (mb *Mockbeat) Cleanup(b *beat.Beat) error {
+	// Wait until mockbeat is done
+	mb.client.PublishEvent(common.MapStr{
+		"@timestamp": common.Time(time.Now()),
+		"type":       "mock",
+		"message":    "Mockbeat is alive!",
+	})
+	<-mb.done
 	return nil
 }
 
 func (mb *Mockbeat) Stop() {
+	logp.Info("Mockbeat Stop")
 
+	mb.client.Close()
+	close(mb.done)
 }

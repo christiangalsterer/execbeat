@@ -33,8 +33,7 @@ _testmain.go
 *.test
 *.prof
 
-cover/
-profile.cov
+build
 .idea
 .DS_Store
 /docs/html_docs

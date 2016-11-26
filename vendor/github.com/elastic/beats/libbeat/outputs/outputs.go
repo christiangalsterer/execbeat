@@ -2,53 +2,38 @@ package outputs
 
 import (
 	"github.com/elastic/beats/libbeat/common"
+	"github.com/elastic/beats/libbeat/common/op"
 	"github.com/elastic/beats/libbeat/logp"
 )
-
-type MothershipConfig struct {
-	Save_topology     bool
-	Host              string
-	Port              int
-	Hosts             []string
-	LoadBalance       *bool
-	Protocol          string
-	Username          string
-	Password          string
-	ProxyURL          string `yaml:"proxy_url"`
-	Index             string
-	Path              string
-	Template          Template
-	Db                int
-	Db_topology       int
-	Timeout           int
-	ReconnectInterval int    `yaml:"reconnect_interval"`
-	Filename          string `yaml:"filename"`
-	RotateEveryKb     int    `yaml:"rotate_every_kb"`
-	NumberOfFiles     int    `yaml:"number_of_files"`
-	DataType          string
-	FlushInterval     *int  `yaml:"flush_interval"`
-	BulkMaxSize       *int  `yaml:"bulk_max_size"`
-	MaxRetries        *int  `yaml:"max_retries"`
-	Pretty            *bool `yaml:"pretty"`
-	TLS               *TLSConfig
-	Worker            int
-	CompressionLevel  *int `yaml:"compression_level"`
-}
-
-type Template struct {
-	Name      string
-	Path      string
-	Overwrite bool
-}
 
 type Options struct {
 	Guaranteed bool
 }
 
+// Data contains the Event and additional values shared/populated by outputs
+// to share state internally in output plugins for example between retries.
+//
+// Values of type Data are pushed by value inside the publisher chain up to the
+// outputs. If multiple outputs are configured, each will receive a copy of Data
+// elemets.
+type Data struct {
+	// Holds the beats published event and MUST be used read-only manner only in
+	// output plugins.
+	Event common.MapStr
+
+	// `Values` can be used to store additional context-dependent metadata
+	// within Data. With `Data` being copied to each output, it is safe to update
+	// `Data.Values` itself in outputs, but access to actually stored values must
+	// be thread-safe: read-only if key might be shared or read/write if value key
+	// is local to output plugin.
+	Values *Values
+}
+
 type Outputer interface {
 	// Publish event
+	PublishEvent(sig op.Signaler, opts Options, data Data) error
 
-	PublishEvent(trans Signaler, opts Options, event common.MapStr) error
+	Close() error
 }
 
 type TopologyOutputer interface {
@@ -63,15 +48,11 @@ type TopologyOutputer interface {
 // Outputers still might loop on events or use more efficient bulk-apis if present.
 type BulkOutputer interface {
 	Outputer
-	BulkPublish(trans Signaler, opts Options, event []common.MapStr) error
+	BulkPublish(sig op.Signaler, opts Options, data []Data) error
 }
 
-type OutputBuilder interface {
-	// Create and initialize the output plugin
-	NewOutput(
-		config *MothershipConfig,
-		topologyExpire int) (Outputer, error)
-}
+// Create and initialize the output plugin
+type OutputBuilder func(beatName string, config *common.Config, topologyExpire int) (Outputer, error)
 
 // Functions to be exported by a output plugin
 type OutputInterface interface {
@@ -81,7 +62,7 @@ type OutputInterface interface {
 
 type OutputPlugin struct {
 	Name   string
-	Config MothershipConfig
+	Config *common.Config
 	Output Outputer
 }
 
@@ -89,33 +70,32 @@ type bulkOutputAdapter struct {
 	Outputer
 }
 
-var enabledOutputPlugins = make(map[string]OutputBuilder)
+var outputsPlugins = make(map[string]OutputBuilder)
 
 func RegisterOutputPlugin(name string, builder OutputBuilder) {
-	enabledOutputPlugins[name] = builder
+	outputsPlugins[name] = builder
 }
 
 func FindOutputPlugin(name string) OutputBuilder {
-	return enabledOutputPlugins[name]
+	return outputsPlugins[name]
 }
 
 func InitOutputs(
 	beatName string,
-	configs map[string]MothershipConfig,
+	configs map[string]*common.Config,
 	topologyExpire int,
 ) ([]OutputPlugin, error) {
 	var plugins []OutputPlugin = nil
-	for name, plugin := range enabledOutputPlugins {
+	for name, plugin := range outputsPlugins {
 		config, exists := configs[name]
 		if !exists {
 			continue
 		}
-
-		if config.Index == "" {
-			config.Index = beatName
+		if !config.Enabled() {
+			continue
 		}
 
-		output, err := plugin.NewOutput(&config, topologyExpire)
+		output, err := plugin(beatName, config, topologyExpire)
 		if err != nil {
 			logp.Err("failed to initialize %s plugin as output: %s", name, err)
 			return nil, err
@@ -139,16 +119,20 @@ func CastBulkOutputer(out Outputer) BulkOutputer {
 }
 
 func (b *bulkOutputAdapter) BulkPublish(
-	signal Signaler,
+	signal op.Signaler,
 	opts Options,
-	events []common.MapStr,
+	data []Data,
 ) error {
-	signal = NewSplitSignaler(signal, len(events))
-	for _, evt := range events {
-		err := b.PublishEvent(signal, opts, evt)
+	signal = op.SplitSignaler(signal, len(data))
+	for _, d := range data {
+		err := b.PublishEvent(signal, opts, d)
 		if err != nil {
 			return err
 		}
 	}
 	return nil
+}
+
+func (d *Data) AddValue(key, value interface{}) {
+	d.Values = d.Values.Append(key, value)
 }

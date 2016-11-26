@@ -21,6 +21,7 @@ import (
 	"fmt"
 	"io"
 	"os/user"
+	"runtime"
 	"strconv"
 	"syscall"
 	"time"
@@ -164,15 +165,19 @@ func (self *CpuList) Get() error {
 	return nil
 }
 
+func (self *FDUsage) Get() error {
+	return ErrNotImplemented{runtime.GOOS}
+}
+
 func (self *FileSystemList) Get() error {
-	num, err := getfsstat(nil, C.MNT_NOWAIT)
-	if num < 0 {
+	num, err := syscall.Getfsstat(nil, C.MNT_NOWAIT)
+	if err != nil {
 		return err
 	}
 
 	buf := make([]syscall.Statfs_t, num)
 
-	num, err = getfsstat(buf, C.MNT_NOWAIT)
+	_, err = syscall.Getfsstat(buf, C.MNT_NOWAIT)
 	if err != nil {
 		return err
 	}
@@ -252,6 +257,8 @@ func (self *ProcState) Get(pid int) error {
 
 	self.Ppid = int(info.pbsd.pbi_ppid)
 
+	self.Pgid = int(info.pbsd.pbi_pgid)
+
 	self.Tty = int(info.pbsd.e_tdev)
 
 	self.Priority = int(info.ptinfo.pti_priority)
@@ -327,6 +334,10 @@ func (self *ProcExe) Get(pid int) error {
 	return kern_procargs(pid, exe, nil, nil)
 }
 
+func (self *ProcFDUsage) Get(pid int) error {
+	return ErrNotImplemented{runtime.GOOS}
+}
+
 // wrapper around sysctl KERN_PROCARGS2
 // callbacks params are optional,
 // up to the caller as to which pieces of data they want
@@ -350,13 +361,19 @@ func kern_procargs(pid int,
 	binary.Read(bbuf, binary.LittleEndian, &argc)
 
 	path, err := bbuf.ReadBytes(0)
+	if err != nil {
+		return fmt.Errorf("Error reading the argv[0]: %v", err)
+	}
 	if exe != nil {
 		exe(string(chop(path)))
 	}
 
 	// skip trailing \0's
 	for {
-		c, _ := bbuf.ReadByte()
+		c, err := bbuf.ReadByte()
+		if err != nil {
+			return fmt.Errorf("Error skipping nils: %v", err)
+		}
 		if c != 0 {
 			bbuf.UnreadByte()
 			break // start of argv[0]
@@ -367,6 +384,9 @@ func kern_procargs(pid int,
 		arg, err := bbuf.ReadBytes(0)
 		if err == io.EOF {
 			break
+		}
+		if err != nil {
+			return fmt.Errorf("Error reading args: %v", err)
 		}
 		if argv != nil {
 			argv(string(chop(arg)))
@@ -383,6 +403,9 @@ func kern_procargs(pid int,
 		line, err := bbuf.ReadBytes(0)
 		if err == io.EOF || line[0] == 0 {
 			break
+		}
+		if err != nil {
+			return fmt.Errorf("Error reading args: %v", err)
 		}
 		pair := bytes.SplitN(chop(line), delim, 2)
 		env(string(pair[0]), string(pair[1]))
@@ -439,30 +462,6 @@ func sysctlbyname(name string, data interface{}) (err error) {
 
 	bbuf := bytes.NewBuffer([]byte(val))
 	return binary.Read(bbuf, binary.LittleEndian, data)
-}
-
-// syscall.Getfsstat() wrapper is broken, roll our own to workaround.
-func getfsstat(buf []syscall.Statfs_t, flags int) (n int, err error) {
-	var ptr uintptr
-	var size uintptr
-
-	if len(buf) > 0 {
-		ptr = uintptr(unsafe.Pointer(&buf[0]))
-		size = unsafe.Sizeof(buf[0]) * uintptr(len(buf))
-	} else {
-		ptr = uintptr(0)
-		size = uintptr(0)
-	}
-
-	trap := uintptr(syscall.SYS_GETFSSTAT64)
-	ret, _, errno := syscall.Syscall(trap, ptr, size, uintptr(flags))
-
-	n = int(ret)
-	if errno != 0 {
-		err = errno
-	}
-
-	return
 }
 
 func task_info(pid int, info *C.struct_proc_taskallinfo) error {

@@ -1,10 +1,12 @@
+// +build !integration
+
 package publisher
 
 import (
+	"runtime"
 	"testing"
 	"time"
 
-	"github.com/elastic/beats/libbeat/common"
 	"github.com/elastic/beats/libbeat/outputs"
 	"github.com/stretchr/testify/assert"
 )
@@ -34,17 +36,9 @@ func (topo testTopology) GetNameByIP(ip string) string {
 	return topo.hostname
 }
 
-// Smoke test PrintPublishEvent. The method has no observable outputs so this
-// is only verifying there are no panics.
-func TestPrintPublishEvent(t *testing.T) {
-	PrintPublishEvent(nil)
-	PrintPublishEvent(common.MapStr{})
-	PrintPublishEvent(testEvent())
-}
-
 // Test GetServerName.
 func TestPublisherTypeGetServerName(t *testing.T) {
-	pt := &PublisherType{name: shipperName}
+	pt := &BeatPublisher{name: shipperName}
 	assert.Equal(t, shipperName, pt.GetServerName("127.0.0.1"))
 
 	// Unknown hosts return empty string.
@@ -64,7 +58,7 @@ func TestPublisherTypeUpdateTopologyPeriodically(t *testing.T) {
 		publishName:       make(chan string, 1),
 		publishLocalAddrs: make(chan []string, 1),
 	}
-	pt := &PublisherType{
+	pt := &BeatPublisher{
 		name:                 shipperName,
 		RefreshTopologyTimer: c,
 		TopologyOutput:       topo,
@@ -77,5 +71,10 @@ func TestPublisherTypeUpdateTopologyPeriodically(t *testing.T) {
 
 	// Validate that PublishTopology was invoked.
 	assert.Equal(t, shipperName, <-topo.publishName)
-	assert.True(t, len(<-topo.publishLocalAddrs) > 0)
+	switch runtime.GOOS {
+	default:
+		assert.True(t, len(<-topo.publishLocalAddrs) > 0)
+	case "nacl", "plan9", "solaris":
+		t.Skipf("Golang's net.InterfaceAddrs is a stub on %s", runtime.GOOS)
+	}
 }

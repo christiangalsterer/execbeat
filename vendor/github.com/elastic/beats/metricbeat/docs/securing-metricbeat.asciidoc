@@ -1,0 +1,21 @@
+[[securing-meticbeat]]
+= Securing {beatname_uc}
+
+[partintro]
+
+--
+The following topics describe how to secure communication between
+{beatname_uc} and other products in the Elastic stack:
+
+* <<securing-communication-elasticsearch>>
+* <<configuring-ssl-logstash>>
+
+--
+
+[[securing-communication-elasticsearch]]
+== Securing Communication With Elasticsearch
+include::../../libbeat/docs/https.asciidoc[]
+
+[[configuring-ssl-logstash]]
+== Securing Communication With Logstash by Using SSL
+include::../../libbeat/docs/shared-ssl-logstash-config.asciidoc[]
