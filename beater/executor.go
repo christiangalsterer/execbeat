@@ -2,12 +2,12 @@ package beat
 
 import (
 	"bytes"
-	"os/exec"
-	"strings"
-	"time"
 	"github.com/christiangalsterer/execbeat/config"
 	"github.com/elastic/beats/libbeat/logp"
 	"github.com/robfig/cron"
+	"os/exec"
+	"strings"
+	"time"
 )
 
 type Executor struct {
