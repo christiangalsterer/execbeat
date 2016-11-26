@@ -17,17 +17,17 @@ type Execbeat struct {
 }
 
 func New(b *beat.Beat, cfg *common.Config) (beat.Beater, error) {
-	bt := &Execbeat{
+	execbeat := &Execbeat{
 		done: make(chan bool),
 	}
 
-	err := cfgfile.Read(&bt.ExecConfig, "")
+	err := cfgfile.Read(&execbeat.ExecConfig, "")
 	if err != nil {
 		logp.Err("Error reading config file: %v", err)
 		return nil, fmt.Errorf("Error reading config file: %v", err)
 	}
 
-	return bt, nil
+	return execbeat, nil
 }
 
 func (exexBeat *Execbeat) Run(b *beat.Beat) error {
