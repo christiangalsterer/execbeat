@@ -110,6 +110,12 @@ This will fetch and create all images required for the build process. The comple
 
 # Releases
 
+2.0.0 (2016-12-23)
+
+Feature release containing the following changes:
+* Update to beats v5.1.1
+
+
 2.0.0 (2016-11-26)
 
 Feature release containing the following changes:

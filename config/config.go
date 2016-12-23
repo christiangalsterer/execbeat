@@ -19,8 +19,8 @@ type ExecConfig struct {
 	Cron         string
 	Command      string
 	Args         string
-	DocumentType string            `yaml:"document_type"`
-	Fields       map[string]string `yaml:"fields"`
+	DocumentType string            `config:"document_type"`
+	Fields       map[string]string `config:"fields"`
 }
 
 type ConfigSettings struct {
