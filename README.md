@@ -29,7 +29,6 @@ in the same directory with the name execbeat.
 make clean && make
 ```
 
-
 ### Run
 
 To run execbeat with debugging output enabled, run:
@@ -38,21 +37,12 @@ To run execbeat with debugging output enabled, run:
 ./execbeat -c execbeat.yml -e -d "*"
 ```
 
-
 ### Test
 
 To test execbeat, run the following command:
 
 ```
 make testsuite
-```
-
-alternatively:
-```
-make unit-tests
-make system-tests
-make integration-tests
-make coverage-report
 ```
 
 The test coverage is reported in the folder `./build/coverage/`
@@ -73,7 +63,7 @@ make update
 To clean execbeat source code, run the following commands:
 
 ```
-make fmt
+make check
 make simplify
 ```
 
@@ -82,7 +72,6 @@ To clean up the build directory and generated artifacts, run:
 ```
 make clean
 ```
-
 
 ### Clone
 
@@ -94,9 +83,7 @@ cd ${GOPATH}/github.com/christiangalsterer
 git clone https://github.com/christiangalsterer/execbeat
 ```
 
-
 For further development, check out the [beat developer guide](https://www.elastic.co/guide/en/beats/libbeat/current/new-beat.html).
-
 
 ## Packaging
 
@@ -110,7 +97,7 @@ This will fetch and create all images required for the build process. The comple
 
 # Releases
 
-2.0.0 (2016-12-23)
+2.1.0 (2016-12-23)
 
 Feature release containing the following changes:
 * Update to beats v5.1.1

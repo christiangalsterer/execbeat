@@ -3,7 +3,9 @@
     "_default_": {
       "_all": {
         "enabled": true,
-        "norms": false
+        "norms": {
+          "enabled": false
+        }
       },
       "dynamic_templates": [
         {
@@ -12,7 +14,7 @@
               "doc_values": true,
               "ignore_above": 1024,
               "index": "not_analyzed",
-              "type": "keyword"
+              "type": "{dynamic_type}"
             },
           "match_mapping_type": "string"
           }
