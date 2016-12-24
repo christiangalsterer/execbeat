@@ -1,0 +1,22 @@
+######################## Execbeat Configuration Example ########################
+
+############################## Execbeat ########################################
+execbeat:
+
+  execs:
+    # Each - Commands to execute.
+    -
+      # Optional cron expression, defines when to execute the command.
+      # Default is every 1 minute.
+      #cron:
+
+      # The command to execute by Execbeat
+      command: date
+
+      # Optional arguments to be passed to the command to execute
+      #args:
+
+      # Type to be published in the 'type' field. For Elasticsearch output,
+      # the type defines the document type these entries should be stored
+      # in. Default: execbeat
+      #document_type:

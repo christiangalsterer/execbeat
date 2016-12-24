@@ -45,6 +45,14 @@ To test execbeat, run the following command:
 make testsuite
 ```
 
+alternatively:
+```
+make unit-tests
+make system-tests
+make integration-tests
+make coverage-report
+```
+
 The test coverage is reported in the folder `./build/coverage/`
 
 ### Update
@@ -96,6 +104,13 @@ make package
 This will fetch and create all images required for the build process. The complete process to finish can take several minutes.
 
 # Releases
+
+2.1.1 (2016-12-)
+
+Bugfix release containing the following changes:
+* Move files into correct place to allow correct bulding with `make package`
+* Move files into correct place to allow correct bulding with `make update`
+* Cleanup of documentation
 
 2.1.0 (2016-12-23)
 
