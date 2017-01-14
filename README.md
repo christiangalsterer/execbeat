@@ -13,11 +13,28 @@ This is often necessary in security restricted network setups, where Logstash is
 Ensure that this folder is at the following location:
 `${GOPATH}/src/github.com/christiangalsterer`
 
-## Getting Started with Execbeat
+## Installation
+
+### Download
+Pre-compiled binaries for different operating systems are available for [download](https://github.com/christiangalsterer/execbeat/releases/tag/2.1.1).
+
+### Installation
+Install the package for your operation system by running the respective package manager or unzipping the package.
+
+### Configuration
+Adjust the `execbeat.yml` configuration file to your needs. You may take `execbeat.full.yml` as an example containing all possible configuration values.
+
+### Running
+In order to start Execbeat please use the respective startup script, e.g. `/usr/bin/execbeat.sh`.
+
+### Starting Execbeat as Service
+Where supported Execbeat can be started also using the respetive service scripts, e.g. `etc/init.d/execsbeat`.
+
+## Building and Releasing Execbeat
 
 ### Requirements
 
-* [Golang](https://golang.org/dl/) 1.7.1
+* [Golang](https://golang.org/dl/) 1.7.4
 * [Glide](https://github.com/Masterminds/glide) >= 0.11.0
 
 ### Build
@@ -105,12 +122,18 @@ This will fetch and create all images required for the build process. The comple
 
 # Releases
 
-2.1.1 (2016-12-)
+2.1.1 (2017-01-14)
+
+[Download](https://github.com/christiangalsterer/execbeat/releases/tag/2.1.1)
+
+Starting with this release pre-compiled binaries for different operating systems are available under the respective tag in the github project. 
 
 Bugfix release containing the following changes:
 * Move files into correct place to allow correct bulding with `make package`
 * Move files into correct place to allow correct bulding with `make update`
 * Cleanup of documentation
+* Update to beats v5.1.2
+* Update to Go 1.7.4
 
 2.1.0 (2016-12-23)
 

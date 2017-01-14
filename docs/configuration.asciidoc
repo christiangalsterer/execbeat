@@ -44,7 +44,7 @@ execbeat:
         host: myhost
 -------------------------------------------------------------------------------------
 
-A complete example can be found in link:../etc/execbeat.yml[etc/execbeat.yml]
+A complete example can be found in link:../execbeat.yml[execbeat.yml]
 
 ==== Options
 

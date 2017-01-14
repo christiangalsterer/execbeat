@@ -21,11 +21,6 @@ execbeat:
       # in. Default: execbeat
       document_type: execbeat
 
-      # Optional additional fields. These field can be freely picked
-      # to add additional information
-      fields:
-        foo: bar
-
 #================================ General ======================================
 
 # The name of the shipper that publishes the network data. It can be used to group
