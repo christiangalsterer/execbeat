@@ -1,6 +1,8 @@
 [![Build Status](https://travis-ci.org/christiangalsterer/execbeat.svg?branch=master)](https://travis-ci.org/christiangalsterer/execbeat)
 [![codecov.io](http://codecov.io/github/christiangalsterer/execbeat/coverage.svg?branch=master)](http://codecov.io/github/christiangalsterer/execbeat?branch=master)
 [![Go Report Card](https://goreportcard.com/badge/github.com/christiangalsterer/execbeat)](https://goreportcard.com/report/github.com/christiangalsterer/execbeat)
+![Elastic Beats 5.2.0](https://img.shields.io/badge/Elastic%20Beats-v5.2.0-blue.svg)
+![Golang 1.7.4](https://img.shields.io/badge/Golang-v1.7.4-blue.svg)
 
 # Overview
 
@@ -122,9 +124,10 @@ This will fetch and create all images required for the build process. The comple
 
 # Releases
 
-2.1.1 (2017-01-14)
+2.2.0 (2017-02-04) [Download](https://github.com/christiangalsterer/execbeat/releases/tag/2.2.0)
+* Update to beats v5.2.0
 
-[Download](https://github.com/christiangalsterer/execbeat/releases/tag/2.1.1)
+2.1.1 (2017-01-14) [Download](https://github.com/christiangalsterer/execbeat/releases/tag/2.1.1)
 
 Starting with this release pre-compiled binaries for different operating systems are available under the respective tag in the github project. 
 
