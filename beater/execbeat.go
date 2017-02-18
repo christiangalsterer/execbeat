@@ -35,7 +35,7 @@ func (exexBeat *Execbeat) Run(b *beat.Beat) error {
 	logp.Info("execbeat is running! Hit CTRL-C to stop it.")
 	exexBeat.client = b.Publisher.Connect()
 
-	for i, exitConfig := range exexBeat.ExecConfig.Execbeat.Execs {
+	for i, exitConfig := range exexBeat.ExecConfig.Execbeat.Commands {
 		logp.Debug("execbeat", "Creating poller # %v with command: %v", i, exitConfig.Command)
 		poller = NewExecutor(exexBeat, exitConfig)
 		go poller.Run()

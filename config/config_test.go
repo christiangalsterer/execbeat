@@ -19,18 +19,18 @@ func TestReadConfig(t *testing.T) {
 	err = cfgfile.Read(config, absPath+"/config.yml")
 	assert.Nil(t, err)
 
-	execs := config.Execbeat.Execs
-	assert.Equal(t, 2, len(execs))
+	commands := config.Execbeat.Commands
+	assert.Equal(t, 2, len(commands))
 
-	assert.Equal(t, "echo1", execs[0].Command)
-	assert.Equal(t, "Execbeat", execs[0].Args)
-	assert.Equal(t, "@every 1m", execs[0].Cron)
-	assert.Equal(t, 2, len(execs[0].Fields))
-	assert.Equal(t, "exec", execs[0].DocumentType)
+	assert.Equal(t, "echo1", commands[0].Command)
+	assert.Equal(t, "Execbeat", commands[0].Args)
+	assert.Equal(t, "@every 1m", commands[0].Schedule)
+	assert.Equal(t, 2, len(commands[0].Fields))
+	assert.Equal(t, "exec", commands[0].DocumentType)
 
-	assert.Equal(t, "echo2", execs[1].Command)
-	assert.Equal(t, "Hello World", execs[1].Args)
-	assert.Equal(t, "@every 2m", execs[1].Cron)
-	assert.Equal(t, 0, len(execs[1].Fields))
-	assert.Equal(t, "", execs[1].DocumentType)
+	assert.Equal(t, "echo2", commands[1].Command)
+	assert.Equal(t, "Hello World", commands[1].Args)
+	assert.Equal(t, "@every 2m", commands[1].Schedule)
+	assert.Equal(t, 0, len(commands[1].Fields))
+	assert.Equal(t, "", commands[1].DocumentType)
 }

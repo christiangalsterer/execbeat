@@ -1,8 +1,8 @@
 execbeat:
 
-   execs:
+   commands:
     -
-      cron: "@every 1m"
+      schedule: "@every 1m"
       command: echo1
       args: "Execbeat"
       fields:
@@ -10,6 +10,6 @@ execbeat:
         foo2: bar2
       document_type: exec
     -
-      cron: "@every 2m"
+      schedule: "@every 2m"
       command: echo2
       args: "Hello World"

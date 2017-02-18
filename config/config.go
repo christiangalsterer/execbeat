@@ -1,22 +1,17 @@
 package config
 
-import (
-	"time"
-)
-
 // Defaults for config variables which are not set
 const (
-	DefaultCron         string        = "@every 1m"
-	DefaultTimeout      time.Duration = 60 * time.Second
-	DefaultDocumentType string        = "execbeat"
+	DefaultSchedule     string = "@every 1m"
+	DefaultDocumentType string = "execbeat"
 )
 
 type ExecbeatConfig struct {
-	Execs []ExecConfig
+	Commands []ExecConfig
 }
 
 type ExecConfig struct {
-	Cron         string
+	Schedule     string
 	Command      string
 	Args         string
 	DocumentType string            `config:"document_type"`

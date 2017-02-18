@@ -13,7 +13,7 @@ import (
 type Executor struct {
 	execbeat *Execbeat
 	config   config.ExecConfig
-	cron     string
+	schedule string
 }
 
 func NewExecutor(execbeat *Execbeat, config config.ExecConfig) *Executor {
@@ -33,14 +33,14 @@ func (e *Executor) Run() {
 	}
 
 	//init the cron schedule
-	if e.config.Cron != "" {
-		e.cron = e.config.Cron
+	if e.config.Schedule != "" {
+		e.schedule = e.config.Schedule
 	} else {
-		e.cron = config.DefaultCron
+		e.schedule = config.DefaultSchedule
 	}
 
 	cron := cron.New()
-	cron.AddFunc(e.config.Cron, func() { e.runOneTime() })
+	cron.AddFunc(e.config.Schedule, func() { e.runOneTime() })
 	cron.Start()
 }
 

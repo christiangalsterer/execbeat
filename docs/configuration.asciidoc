@@ -11,8 +11,8 @@ in the following sections of the {libbeat}/configuration.html[Beats Platform Ref
 
 === Execbeat
 
-The `execbeat` section specifies a list of `execs` that Execbeat calls in a scheduled fashion.
-Each exec item begins with a dash (-) and specifies command specific configuration options.
+The `execbeat` section specifies a list of `commands` that Execbeat calls in a scheduled fashion.
+Each command item begins with a dash (-) and specifies command specific configuration options.
 
 Here is a sample configuration:
 
@@ -20,12 +20,12 @@ Here is a sample configuration:
 -------------------------------------------------------------------------------------
 execbeat:
 
-  execs:
+  commands:
     # Each - Commands to execute.
     -
       # Optional cron expression, defines when to execute the command.
       # Default is every 1 minute.
-      cron: "@every 5s"
+      schedule: "@every 5s"
 
       # The command to execute by Execbeat
       command: echo
@@ -48,13 +48,13 @@ A complete example can be found in link:../execbeat.yml[execbeat.yml]
 
 ==== Options
 
-===== cron
+===== schedule
 
 Optional cron expression, defines when to execute the command. Default is every 1 minute.
 
 [source,yaml]
 -------------------------------------------------------------------------------------
-cron: @every 1m
+schedule: @every 1m
 -------------------------------------------------------------------------------------
 
 ===== command
