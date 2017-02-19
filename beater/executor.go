@@ -14,6 +14,7 @@ type Executor struct {
 	execbeat *Execbeat
 	config   config.ExecConfig
 	schedule string
+	documentType string
 }
 
 func NewExecutor(execbeat *Execbeat, config config.ExecConfig) *Executor {
@@ -27,20 +28,23 @@ func NewExecutor(execbeat *Execbeat, config config.ExecConfig) *Executor {
 
 func (e *Executor) Run() {
 
-	// Setup DocumentType
-	if e.config.DocumentType == "" {
-		e.config.DocumentType = config.DefaultDocumentType
+	// setup default config
+	e.documentType = config.DefaultDocumentType
+	e.schedule = config.DefaultSchedule
+
+	// setup DocumentType
+	if e.config.DocumentType != "" {
+		e.documentType = e.config.DocumentType
 	}
 
-	//init the cron schedule
+	// setup cron schedule
 	if e.config.Schedule != "" {
+		logp.Debug("Execbeat", "Use schedule: [%w]", e.config.Schedule)
 		e.schedule = e.config.Schedule
-	} else {
-		e.schedule = config.DefaultSchedule
 	}
 
 	cron := cron.New()
-	cron.AddFunc(e.config.Schedule, func() { e.runOneTime() })
+	cron.AddFunc(e.schedule, func() { e.runOneTime() })
 	cron.Start()
 }
 
@@ -83,7 +87,7 @@ func (e *Executor) runOneTime() error {
 
 	event := ExecEvent{
 		ReadTime:     now,
-		DocumentType: e.config.DocumentType,
+		DocumentType: e.documentType,
 		Fields:       e.config.Fields,
 		Exec:         commandEvent,
 	}

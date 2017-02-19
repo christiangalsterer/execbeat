@@ -126,10 +126,11 @@ This will fetch and create all images required for the build process. The comple
 
 3.0.0 (WiP) [Download](https://github.com/christiangalsterer/execbeat/releases/tag/3.0.0)
 
-Feature release containing the following **breaking** changes:
+Feature and bugfix release containing the following **breaking** changes:
 * Renamed configuration parameter `execs`to `commands`. Please update your configuration accordingly.
 * Renamed configuration parameter `cron`to `schedule`. Please update your configuration accordingly.
 * Update to beats v5.2.1
+* Fix: [Default schedule not working](https://github.com/christiangalsterer/execbeat/issues/6)
 
 2.2.0 (2017-02-04) [Download](https://github.com/christiangalsterer/execbeat/releases/tag/2.2.0)
 * Update to beats v5.2.0
