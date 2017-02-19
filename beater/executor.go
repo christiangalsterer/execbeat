@@ -11,9 +11,9 @@ import (
 )
 
 type Executor struct {
-	execbeat *Execbeat
-	config   config.ExecConfig
-	schedule string
+	execbeat     *Execbeat
+	config       config.ExecConfig
+	schedule     string
 	documentType string
 }
 
@@ -32,7 +32,7 @@ func (e *Executor) Run() {
 	e.documentType = config.DefaultDocumentType
 	e.schedule = config.DefaultSchedule
 
-	// setup DocumentType
+	// setup document type
 	if e.config.DocumentType != "" {
 		e.documentType = e.config.DocumentType
 	}
