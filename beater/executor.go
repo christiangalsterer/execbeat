@@ -50,20 +50,26 @@ func (e *Executor) Run() {
 
 func (e *Executor) runOneTime() error {
 	var cmd *exec.Cmd
+	var cmdArgs []string
 	var err error
 	var stdout bytes.Buffer
 	var stderr bytes.Buffer
 
 	cmdName := strings.TrimSpace(e.config.Command)
-	cmdArgs := strings.TrimSpace(e.config.Args)
+
+	args := strings.TrimSpace(e.config.Args)
+	if len(args) > 0 {
+		cmdArgs = strings.Split(args, " ")
+	}
 
 	// execute command
-	logp.Debug("Execbeat", "Executing command: [%v] with args [%w]", cmdName, cmdArgs)
 	now := time.Now()
 
 	if len(cmdArgs) > 0 {
-		cmd = exec.Command(cmdName, cmdArgs)
+		logp.Debug("Execbeat", "Executing command: [%v] with args [%w]", cmdName, cmdArgs)
+		cmd = exec.Command(cmdName, cmdArgs...)
 	} else {
+		logp.Debug("Execbeat", "Executing command: [%v]", cmdName)
 		cmd = exec.Command(cmdName)
 	}
 	cmd.Stdout = &stdout

@@ -124,6 +124,11 @@ This will fetch and create all images required for the build process. The comple
 
 # Releases
 
+3.0.1 (2017-02-21) [Download](https://github.com/christiangalsterer/execbeat/releases/tag/3.0.1)
+
+Bugfix release containing the following changes:
+* [Multiple arguments are not properly passed](https://github.com/christiangalsterer/execbeat/issues/7)
+
 3.0.0 (2017-02-19) [Download](https://github.com/christiangalsterer/execbeat/releases/tag/3.0.0)
 
 Feature and bugfix release containing the following **breaking** changes:
