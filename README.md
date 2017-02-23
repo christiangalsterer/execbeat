@@ -124,7 +124,7 @@ This will fetch and create all images required for the build process. The comple
 
 # Releases
 
-3.1.0 (2017-02-23) [Download](https://github.com/christiangalsterer/execbeat/releases/tag/3.0.2)
+3.1.0 (2017-02-23) [Download](https://github.com/christiangalsterer/execbeat/releases/tag/3.1.0)
 
 Feature and bugfix release containing the following changes:
 * The exit code of the command executed is now exported in field `exitCode`.
