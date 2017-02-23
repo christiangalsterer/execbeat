@@ -51,6 +51,11 @@
               "index": "not_analyzed",
               "type": "string"
             },
+            "exitCode": {
+              "ignore_above": 1024,
+              "index": "not_analyzed",
+              "type": "string"
+            },
             "stderr": {
               "ignore_above": 1024,
               "index": "not_analyzed",

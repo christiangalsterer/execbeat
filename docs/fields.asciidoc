@@ -152,3 +152,11 @@ type: keyword
 Standard error produced by the command executed by Execbeat.
 
 
+[float]
+=== exec.exitCode
+
+type: keyword
+
+Exit code of the command executed by Execbeat.
+
+

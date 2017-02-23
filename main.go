@@ -6,7 +6,7 @@ import (
 	"os"
 )
 
-var version = "3.0.1"
+var version = "3.1.0-SNAPSHOT"
 var name = "execbeat"
 
 func main() {

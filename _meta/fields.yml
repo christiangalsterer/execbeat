@@ -19,3 +19,7 @@
           type: keyword
           description: >
             Standard error produced by the command executed by Execbeat.
+        - name: exitCode
+          type: keyword
+          description: >
+            Exit code of the command executed by Execbeat.

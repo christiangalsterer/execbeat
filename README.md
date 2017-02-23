@@ -124,6 +124,12 @@ This will fetch and create all images required for the build process. The comple
 
 # Releases
 
+3.1.0 (2017-02-23) [Download](https://github.com/christiangalsterer/execbeat/releases/tag/3.0.2)
+
+Feature and bugfix release containing the following changes:
+* The exit code of the command executed is now exported in field `exitCode`.
+* Fix: Examples were not fully updated with configuration changes introduced in 3.0.0.
+
 3.0.1 (2017-02-21) [Download](https://github.com/christiangalsterer/execbeat/releases/tag/3.0.1)
 
 Bugfix release containing the following changes:
@@ -217,6 +223,7 @@ See [here](docs/fields.asciidoc) for a detailed description of all exported fiel
     },
     "exec": {
       "command": "echo",
+      "exitCode": 0,
       "stdout": "Hello World\n"
     },
     "fields": {

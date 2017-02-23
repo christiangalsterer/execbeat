@@ -7,6 +7,7 @@ import (
 	"github.com/robfig/cron"
 	"os/exec"
 	"strings"
+	"syscall"
 	"time"
 )
 
@@ -54,6 +55,8 @@ func (e *Executor) runOneTime() error {
 	var err error
 	var stdout bytes.Buffer
 	var stderr bytes.Buffer
+	var waitStatus syscall.WaitStatus
+	var exitCode int = 0
 
 	cmdName := strings.TrimSpace(e.config.Command)
 
@@ -83,12 +86,17 @@ func (e *Executor) runOneTime() error {
 	err = cmd.Wait()
 	if err != nil {
 		logp.Err("An error occured while executing command: %v", err)
+		if exitError, ok := err.(*exec.ExitError); ok {
+			waitStatus = exitError.Sys().(syscall.WaitStatus)
+			exitCode = waitStatus.ExitStatus()
+		}
 	}
 
 	commandEvent := Exec{
-		Command: cmdName,
-		StdOut:  stdout.String(),
-		StdErr:  stderr.String(),
+		Command:  cmdName,
+		StdOut:   stdout.String(),
+		StdErr:   stderr.String(),
+		ExitCode: exitCode,
 	}
 
 	event := ExecEvent{
