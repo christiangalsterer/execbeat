@@ -3,6 +3,7 @@ BEAT_DESCRIPTION=Execute commands in a regular interval and the standard output 
 BEAT_DIR=github.com/christiangalsterer/execbeat
 SYSTEM_TESTS=false
 TEST_ENVIRONMENT=false
+SNAPSHOT=no
 ES_BEATS?=./vendor/github.com/elastic/beats
 # GOPACKAGES=$(shell glide novendor)
 GOPACKAGES=$(shell go list ${BEAT_DIR}/... | grep -v /vendor/)
