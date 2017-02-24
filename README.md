@@ -124,7 +124,7 @@ This will fetch and create all images required for the build process. The comple
 
 # Releases
 
-3.1.1 (WiP) [Download](https://github.com/christiangalsterer/execbeat/releases/tag/3.1.1)
+3.1.1 (2017-02-24) [Download](https://github.com/christiangalsterer/execbeat/releases/tag/3.1.1)
 
 Bugfix release containing the following changes:
 * [Set correct version in package names and package metadata](https://github.com/christiangalsterer/execbeat/issues/10)
