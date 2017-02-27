@@ -1,6 +1,9 @@
 [![Build Status](https://travis-ci.org/christiangalsterer/execbeat.svg?branch=master)](https://travis-ci.org/christiangalsterer/execbeat)
 [![codecov.io](http://codecov.io/github/christiangalsterer/execbeat/coverage.svg?branch=master)](http://codecov.io/github/christiangalsterer/execbeat?branch=master)
 [![Go Report Card](https://goreportcard.com/badge/github.com/christiangalsterer/execbeat)](https://goreportcard.com/report/github.com/christiangalsterer/execbeat)
+[![license](https://img.shields.io/github/license/christiangalsterer/execbeat.svg)](https://github.com/christiangalsterer/execbeat)
+[![Github All Releases](https://img.shields.io/github/downloads/christiangalsterer/execbeat/total.svg)](https://github.com/christiangalsterer/execbeat)
+
 ![Elastic Beats 5.2.1](https://img.shields.io/badge/Elastic%20Beats-v5.2.1-blue.svg)
 ![Golang 1.7.4](https://img.shields.io/badge/Golang-v1.7.4-blue.svg)
 
@@ -125,22 +128,26 @@ This will fetch and create all images required for the build process. The comple
 # Releases
 
 3.1.1 (2017-02-24) [Download](https://github.com/christiangalsterer/execbeat/releases/tag/3.1.1)
+[![Github Releases (by Release)](https://img.shields.io/github/downloads/christiangalsterer/execbeat/3.1.1/total.svg)](https://github.com/christiangalsterer/execneat/releases/tag/3.1.1)
 
 Bugfix release containing the following changes:
 * [Set correct version in package names and package metadata](https://github.com/christiangalsterer/execbeat/issues/10)
 
 3.1.0 (2017-02-23) [Download](https://github.com/christiangalsterer/execbeat/releases/tag/3.1.0)
+[![Github Releases (by Release)](https://img.shields.io/github/downloads/christiangalsterer/execbeat/3.1.0/total.svg)](https://github.com/christiangalsterer/execneat/releases/tag/3.1.0)
 
 Feature and bugfix release containing the following changes:
 * The exit code of the command executed is now exported in field `exitCode`.
 * Fix: Examples were not fully updated with configuration changes introduced in 3.0.0.
 
 3.0.1 (2017-02-21) [Download](https://github.com/christiangalsterer/execbeat/releases/tag/3.0.1)
+[![Github Releases (by Release)](https://img.shields.io/github/downloads/christiangalsterer/execbeat/3.0.1/total.svg)](https://github.com/christiangalsterer/execneat/releases/tag/3.0.1)
 
 Bugfix release containing the following changes:
 * [Multiple arguments are not properly passed](https://github.com/christiangalsterer/execbeat/issues/7)
 
 3.0.0 (2017-02-19) [Download](https://github.com/christiangalsterer/execbeat/releases/tag/3.0.0)
+[![Github Releases (by Release)](https://img.shields.io/github/downloads/christiangalsterer/execbeat/3.0.0/total.svg)](https://github.com/christiangalsterer/execneat/releases/tag/3.0.0)
 
 Feature and bugfix release containing the following **breaking** changes:
 * Renamed configuration parameter `execs` to `commands`. Please update your configuration accordingly.
@@ -149,9 +156,13 @@ Feature and bugfix release containing the following **breaking** changes:
 * Fix: [Default schedule not working](https://github.com/christiangalsterer/execbeat/issues/6)
 
 2.2.0 (2017-02-04) [Download](https://github.com/christiangalsterer/execbeat/releases/tag/2.2.0)
+[![Github Releases (by Release)](https://img.shields.io/github/downloads/christiangalsterer/execbeat/2.2.0/total.svg)](https://github.com/christiangalsterer/execneat/releases/tag/2.2.0)
+
+Feature release containing the following changes:
 * Update to beats v5.2.0
 
 2.1.1 (2017-01-14) [Download](https://github.com/christiangalsterer/execbeat/releases/tag/2.1.1)
+[![Github Releases (by Release)](https://img.shields.io/github/downloads/christiangalsterer/execbeat/2.1.1/total.svg)](https://github.com/christiangalsterer/execneat/releases/tag/2.1.1)
 
 Starting with this release pre-compiled binaries for different operating systems are available under the respective tag in the github project. 
 
