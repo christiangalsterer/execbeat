@@ -127,26 +127,26 @@ This will fetch and create all images required for the build process. The comple
 
 # Releases
 
-3.1.1 (2017-02-24) [Download](https://github.com/christiangalsterer/execbeat/releases/tag/3.1.1)
+## 3.1.1 (2017-02-24) [Download](https://github.com/christiangalsterer/execbeat/releases/tag/3.1.1)
 [![Github Releases (by Release)](https://img.shields.io/github/downloads/christiangalsterer/execbeat/3.1.1/total.svg)](https://github.com/christiangalsterer/execneat/releases/tag/3.1.1)
 
 Bugfix release containing the following changes:
 * [Set correct version in package names and package metadata](https://github.com/christiangalsterer/execbeat/issues/10)
 
-3.1.0 (2017-02-23) [Download](https://github.com/christiangalsterer/execbeat/releases/tag/3.1.0)
+## 3.1.0 (2017-02-23) [Download](https://github.com/christiangalsterer/execbeat/releases/tag/3.1.0)
 [![Github Releases (by Release)](https://img.shields.io/github/downloads/christiangalsterer/execbeat/3.1.0/total.svg)](https://github.com/christiangalsterer/execneat/releases/tag/3.1.0)
 
 Feature and bugfix release containing the following changes:
 * The exit code of the command executed is now exported in field `exitCode`.
 * Fix: Examples were not fully updated with configuration changes introduced in 3.0.0.
 
-3.0.1 (2017-02-21) [Download](https://github.com/christiangalsterer/execbeat/releases/tag/3.0.1)
+## 3.0.1 (2017-02-21) [Download](https://github.com/christiangalsterer/execbeat/releases/tag/3.0.1)
 [![Github Releases (by Release)](https://img.shields.io/github/downloads/christiangalsterer/execbeat/3.0.1/total.svg)](https://github.com/christiangalsterer/execneat/releases/tag/3.0.1)
 
 Bugfix release containing the following changes:
 * [Multiple arguments are not properly passed](https://github.com/christiangalsterer/execbeat/issues/7)
 
-3.0.0 (2017-02-19) [Download](https://github.com/christiangalsterer/execbeat/releases/tag/3.0.0)
+## 3.0.0 (2017-02-19) [Download](https://github.com/christiangalsterer/execbeat/releases/tag/3.0.0)
 [![Github Releases (by Release)](https://img.shields.io/github/downloads/christiangalsterer/execbeat/3.0.0/total.svg)](https://github.com/christiangalsterer/execneat/releases/tag/3.0.0)
 
 Feature and bugfix release containing the following **breaking** changes:
@@ -155,13 +155,13 @@ Feature and bugfix release containing the following **breaking** changes:
 * Update to beats v5.2.1
 * Fix: [Default schedule not working](https://github.com/christiangalsterer/execbeat/issues/6)
 
-2.2.0 (2017-02-04) [Download](https://github.com/christiangalsterer/execbeat/releases/tag/2.2.0)
+## 2.2.0 (2017-02-04) [Download](https://github.com/christiangalsterer/execbeat/releases/tag/2.2.0)
 [![Github Releases (by Release)](https://img.shields.io/github/downloads/christiangalsterer/execbeat/2.2.0/total.svg)](https://github.com/christiangalsterer/execneat/releases/tag/2.2.0)
 
 Feature release containing the following changes:
 * Update to beats v5.2.0
 
-2.1.1 (2017-01-14) [Download](https://github.com/christiangalsterer/execbeat/releases/tag/2.1.1)
+## 2.1.1 (2017-01-14) [Download](https://github.com/christiangalsterer/execbeat/releases/tag/2.1.1)
 [![Github Releases (by Release)](https://img.shields.io/github/downloads/christiangalsterer/execbeat/2.1.1/total.svg)](https://github.com/christiangalsterer/execneat/releases/tag/2.1.1)
 
 Starting with this release pre-compiled binaries for different operating systems are available under the respective tag in the github project. 
@@ -173,12 +173,12 @@ Bugfix release containing the following changes:
 * Update to beats v5.1.2
 * Update to Go 1.7.4
 
-2.1.0 (2016-12-23)
+## 2.1.0 (2016-12-23)
 
 Feature release containing the following changes:
 * Update to beats v5.1.1
 
-2.0.0 (2016-11-26)
+## 2.0.0 (2016-11-26)
 
 Feature release containing the following changes:
 * Update to beats v5.0.1
@@ -190,19 +190,19 @@ Please note that this release contains the following breaking changes introduced
     * replace tls.insecure with ssl.verification_mode setting.
     * replace tls.min/max_version with ssl.supported_protocols setting requiring full protocol name
 
-1.1.0 (2016-07-19)
+## 1.1.0 (2016-07-19)
 
 Feature release containing the following changes:
 * Update to Go 1.6
 * Update to libbeat 1.2.3
 * Use [Glide](https://github.com/Masterminds/glide) for dependency management
 
-1.0.1 (2016-02-15)
+## 1.0.1 (2016-02-15)
 
 Bugfix release containing the following changes:
 * Fix: [Hanging during shutdown](https://github.com/christiangalsterer/execbeat/issues/2)
 
-1.0.0 (2015-12-26)
+## 1.0.0 (2015-12-26)
 * Initial release
 
 # Configuration
