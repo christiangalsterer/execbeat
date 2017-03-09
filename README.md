@@ -21,7 +21,7 @@ Ensure that this folder is at the following location:
 ## Installation
 
 ### Download
-Pre-compiled binaries for different operating systems are available for [download](https://github.com/christiangalsterer/execbeat/releases/tag/2.1.1).
+Pre-compiled binaries for different operating systems are available for [download](#Releases).
 
 ### Installation
 Install the package for your operation system by running the respective package manager or unzipping the package.
