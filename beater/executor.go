@@ -81,6 +81,7 @@ func (e *Executor) runOneTime() error {
 	err = cmd.Start()
 	if err != nil {
 		logp.Err("An error occured while executing command: %v", err)
+		exitCode = 127
 	}
 
 	err = cmd.Wait()
