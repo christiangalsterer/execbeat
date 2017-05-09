@@ -14,6 +14,7 @@ type ExecConfig struct {
 	Schedule     string
 	Command      string
 	Args         string
+	LineMode     bool              `config:"line_mode"`
 	DocumentType string            `config:"document_type"`
 	Fields       map[string]string `config:"fields"`
 }

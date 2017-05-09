@@ -20,3 +20,6 @@ execbeat:
       # the type defines the document type these entries should be stored
       # in. Default: execbeat
       document_type: execbeat
+
+      # Send message for each line of output
+      line_mode: false

@@ -9,7 +9,8 @@ type ExecEvent struct {
 	ReadTime     time.Time
 	DocumentType string
 	Fields       map[string]string
-	Exec         Exec
+	Exec         *Exec
+	Line         *Line
 }
 
 type Exec struct {
@@ -19,11 +20,24 @@ type Exec struct {
 	ExitCode int    `json:"exitCode"`
 }
 
+type Line struct {
+	Command    string `json:"command,omitempty"`
+	Source     string `json:"source"`
+	LineNumber int    `json:"line_number"`
+	Line       string `json:"line"`
+	ExitCode   int    `json:"exitCode"`
+}
+
 func (h *ExecEvent) ToMapStr() common.MapStr {
 	event := common.MapStr{
 		"@timestamp": common.Time(h.ReadTime),
 		"type":       h.DocumentType,
-		"exec":       h.Exec,
+	}
+	if h.Exec != nil {
+		event["exec"] = h.Exec
+	}
+	if h.Line != nil {
+		event["line"] = h.Line
 	}
 
 	if h.Fields != nil {

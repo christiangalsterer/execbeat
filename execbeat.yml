@@ -21,6 +21,9 @@ execbeat:
       # in. Default: execbeat
       #document_type:
 
+      # Send message for each line of output
+      #line_mode: false
+
 #================================ General =====================================
 
 # The name of the shipper that publishes the network data. It can be used to group

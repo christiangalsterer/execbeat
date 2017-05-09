@@ -160,3 +160,44 @@ type: keyword
 Exit code of the command executed by Execbeat.
 
 
+
+[float]
+=== line.command
+
+type: keyword
+
+The command executed by Execbeat.
+
+
+[float]
+=== line.line
+
+type: keyword
+
+Single Line from output produced by the command executed by Execbeat.
+
+
+[float]
+=== line.line_number
+
+type: long
+
+Line number of the line from output produced by the command executed by Execbeat.
+
+
+[float]
+=== line.source
+
+type: keyword
+
+Source of the line. Either stdout or stderr.
+
+
+[float]
+=== line.exitCode
+
+type: keyword
+
+Exit code of the command executed by Execbeat.
+
+

@@ -68,6 +68,33 @@
             }
           }
         },
+        "line": {
+          "properties": {
+            "command": {
+              "ignore_above": 1024,
+              "index": "not_analyzed",
+              "type": "string"
+            },
+            "exitCode": {
+              "ignore_above": 1024,
+              "index": "not_analyzed",
+              "type": "string"
+            },
+            "line": {
+              "ignore_above": 1024,
+              "index": "not_analyzed",
+              "type": "string"
+            },
+            "line_number": {
+              "type": "long"
+            },
+            "source": {
+              "ignore_above": 1024,
+              "index": "not_analyzed",
+              "type": "string"
+            }
+          }
+        },
         "meta": {
           "properties": {
             "cloud": {

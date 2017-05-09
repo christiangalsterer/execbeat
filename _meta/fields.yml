@@ -23,3 +23,30 @@
           type: keyword
           description: >
             Exit code of the command executed by Execbeat.
+    - name: line
+      type: group
+      fields:
+        - name: command
+          type: keyword
+          description: >
+            The command executed by Execbeat.
+
+        - name: line
+          type: keyword
+          description: >
+            Single Line from output produced by the command executed by Execbeat.
+
+        - name: line_number
+          type: long
+          description: >
+            Line number of the line from output produced by the command executed by Execbeat.
+
+        - name: source
+          type: keyword
+          description: >
+            Source of the line. Either stdout or stderr.
+
+        - name: exitCode
+          type: keyword
+          description: >
+            Exit code of the command executed by Execbeat.

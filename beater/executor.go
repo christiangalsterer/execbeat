@@ -45,8 +45,36 @@ func (e *Executor) Run() {
 	}
 
 	cron := cron.New()
-	cron.AddFunc(e.schedule, func() { e.runOneTime() })
+	cron.AddFunc(e.schedule, func() {
+		e.runOneTime()
+	})
 	cron.Start()
+}
+
+func (e *Executor) sendLines(buf bytes.Buffer, source string, cmdName string, exitCode int, now time.Time) {
+	n := 0
+	for _, s := range strings.Split(buf.String(), "\n") {
+		if len(s) > 0 {
+			lineEvent := Line{
+				Command:    cmdName,
+				Source:     source,
+				LineNumber: n,
+				Line:       s,
+				ExitCode:   exitCode,
+			}
+
+			event := ExecEvent{
+				ReadTime:     now,
+				DocumentType: e.documentType,
+				Fields:       e.config.Fields,
+				Line:         &lineEvent,
+			}
+
+			e.execbeat.client.PublishEvent(event.ToMapStr())
+
+			n += 1
+		}
+	}
 }
 
 func (e *Executor) runOneTime() error {
@@ -93,21 +121,26 @@ func (e *Executor) runOneTime() error {
 		}
 	}
 
-	commandEvent := Exec{
-		Command:  cmdName,
-		StdOut:   stdout.String(),
-		StdErr:   stderr.String(),
-		ExitCode: exitCode,
-	}
+	if e.config.LineMode {
+		e.sendLines(stdout, "stdout", cmdName, exitCode, now)
+		e.sendLines(stderr, "stderr", cmdName, exitCode, now)
+	} else {
+		commandEvent := Exec{
+			Command:  cmdName,
+			StdOut:   stdout.String(),
+			StdErr:   stderr.String(),
+			ExitCode: exitCode,
+		}
 
-	event := ExecEvent{
-		ReadTime:     now,
-		DocumentType: e.documentType,
-		Fields:       e.config.Fields,
-		Exec:         commandEvent,
-	}
+		event := ExecEvent{
+			ReadTime:     now,
+			DocumentType: e.documentType,
+			Fields:       e.config.Fields,
+			Exec:         &commandEvent,
+		}
 
-	e.execbeat.client.PublishEvent(event.ToMapStr())
+		e.execbeat.client.PublishEvent(event.ToMapStr())
+	}
 
 	return nil
 }
