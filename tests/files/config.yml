@@ -13,3 +13,4 @@ execbeat:
       schedule: "@every 2m"
       command: echo2
       args: "Hello World"
+
