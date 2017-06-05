@@ -1,6 +1,6 @@
 - module: {module}
   metricsets: ["{metricset}"]
   enabled: true
-  period: 10s
+  period: 1s
   hosts: ["localhost"]
 

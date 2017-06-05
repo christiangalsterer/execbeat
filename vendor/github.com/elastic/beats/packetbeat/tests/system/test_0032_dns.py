@@ -6,7 +6,6 @@ Tests for the DNS protocol.
 
 
 class Test(BaseTest):
-
     def test_A(self):
         """
         Should correctly interpret an A query to google.com

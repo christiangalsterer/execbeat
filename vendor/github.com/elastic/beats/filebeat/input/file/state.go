@@ -39,7 +39,7 @@ func (s *State) IsEmpty() bool {
 // States handles list of FileState
 type States struct {
 	states []State
-	sync.Mutex
+	mutex  sync.Mutex
 }
 
 func NewStates() *States {
@@ -50,8 +50,8 @@ func NewStates() *States {
 
 // Update updates a state. If previous state didn't exist, new one is created
 func (s *States) Update(newState State) {
-	s.Lock()
-	defer s.Unlock()
+	s.mutex.Lock()
+	defer s.mutex.Unlock()
 
 	index, _ := s.findPrevious(newState)
 	newState.Timestamp = time.Now()
@@ -67,8 +67,8 @@ func (s *States) Update(newState State) {
 
 func (s *States) FindPrevious(newState State) State {
 	// TODO: This currently blocks writing updates every time state is fetched. Should be improved for performance
-	s.Lock()
-	defer s.Unlock()
+	s.mutex.Lock()
+	defer s.mutex.Unlock()
 	_, state := s.findPrevious(newState)
 	return state
 }
@@ -92,8 +92,8 @@ func (s *States) findPrevious(newState State) (int, State) {
 // The number of states that were cleaned up is returned
 func (s *States) Cleanup() int {
 
-	s.Lock()
-	defer s.Unlock()
+	s.mutex.Lock()
+	defer s.mutex.Unlock()
 
 	statesBefore := len(s.states)
 
@@ -122,16 +122,16 @@ func (s *States) Cleanup() int {
 
 // Count returns number of states
 func (s *States) Count() int {
-	s.Lock()
-	defer s.Unlock()
+	s.mutex.Lock()
+	defer s.mutex.Unlock()
 
 	return len(s.states)
 }
 
 // Returns a copy of the file states
 func (s *States) GetStates() []State {
-	s.Lock()
-	defer s.Unlock()
+	s.mutex.Lock()
+	defer s.mutex.Unlock()
 
 	newStates := make([]State, len(s.states))
 	copy(newStates, s.states)
@@ -141,8 +141,8 @@ func (s *States) GetStates() []State {
 
 // SetStates overwrites all internal states with the given states array
 func (s *States) SetStates(states []State) {
-	s.Lock()
-	defer s.Unlock()
+	s.mutex.Lock()
+	defer s.mutex.Unlock()
 	s.states = states
 }
 

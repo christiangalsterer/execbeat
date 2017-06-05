@@ -2,7 +2,6 @@ from packetbeat import BaseTest
 
 
 class Test(BaseTest):
-
     def test_extended_query(self):
         self.render_config_template(
             pgsql_ports=[5432]
@@ -17,3 +16,4 @@ class Test(BaseTest):
         assert o["query"] == "SELECT * from test where id = $1"
         assert o["bytes_in"] == 90
         assert o["bytes_out"] == 101
+

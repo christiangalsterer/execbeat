@@ -1,6 +1,6 @@
-== Couchbase Module
+== couchbase Module
 
-beta[]
+experimental[]
 
-This module periodically fetches metrics from https://www.couchbase.com/[Couchbase]
-servers.
+This is the couchbase Module.
+

@@ -9,8 +9,6 @@ import (
 	"sync"
 	"time"
 
-	"github.com/davecgh/go-spew/spew"
-	"github.com/pmezard/go-difflib/difflib"
 	"github.com/stretchr/objx"
 	"github.com/stretchr/testify/assert"
 )
@@ -45,11 +43,8 @@ type Call struct {
 	// expectations. 0 means to always return the value.
 	Repeatability int
 
-	// Amount of times this call has been called
-	totalCalls int
-
 	// Holds a channel that will be used to block the Return until it either
-	// receives a message or is closed. nil means it returns immediately.
+	// recieves a message or is closed. nil means it returns immediately.
 	WaitFor <-chan time.Time
 
 	// Holds a handler used to manipulate arguments content that are passed by
@@ -137,11 +132,11 @@ func (c *Call) After(d time.Duration) *Call {
 // mocking a method such as unmarshalers that takes a pointer to a struct and
 // sets properties in such struct
 //
-//    Mock.On("Unmarshal", AnythingOfType("*map[string]interface{}").Return().Run(func(args Arguments) {
+//    Mock.On("Unmarshal", AnythingOfType("*map[string]interface{}").Return().Run(function(args Arguments) {
 //    	arg := args.Get(0).(*map[string]interface{})
 //    	arg["foo"] = "bar"
 //    })
-func (c *Call) Run(fn func(args Arguments)) *Call {
+func (c *Call) Run(fn func(Arguments)) *Call {
 	c.lock()
 	defer c.unlock()
 	c.RunFn = fn
@@ -214,6 +209,8 @@ func (m *Mock) On(methodName string, arguments ...interface{}) *Call {
 // */
 
 func (m *Mock) findExpectedCall(method string, arguments ...interface{}) (int, *Call) {
+	m.mutex.Lock()
+	defer m.mutex.Unlock()
 	for i, call := range m.ExpectedCalls {
 		if call.Method == method && call.Repeatability > -1 {
 
@@ -265,7 +262,7 @@ func callString(method string, arguments Arguments, includeArgumentValues bool) 
 }
 
 // Called tells the mock object that a method has been called, and gets an array
-// of arguments to return.  Panics if the call is unexpected (i.e. not preceded by
+// of arguments to return.  Panics if the call is unexpected (i.e. not preceeded by
 // appropriate .On .Return() calls)
 // If Call.WaitFor is set, blocks until the channel is closed or receives a message.
 func (m *Mock) Called(arguments ...interface{}) Arguments {
@@ -277,7 +274,7 @@ func (m *Mock) Called(arguments ...interface{}) Arguments {
 	functionPath := runtime.FuncForPC(pc).Name()
 	//Next four lines are required to use GCCGO function naming conventions.
 	//For Ex:  github_com_docker_libkv_store_mock.WatchTree.pN39_github_com_docker_libkv_store_mock.Mock
-	//uses interface information unlike golang github.com/docker/libkv/store/mock.(*Mock).WatchTree
+	//uses inteface information unlike golang github.com/docker/libkv/store/mock.(*Mock).WatchTree
 	//With GCCGO we need to remove interface information starting from pN<dd>.
 	re := regexp.MustCompile("\\.pN\\d+_")
 	if re.MatchString(functionPath) {
@@ -285,16 +282,8 @@ func (m *Mock) Called(arguments ...interface{}) Arguments {
 	}
 	parts := strings.Split(functionPath, ".")
 	functionName := parts[len(parts)-1]
-	return m.MethodCalled(functionName, arguments...)
-}
 
-// MethodCalled tells the mock object that the given method has been called, and gets
-// an array of arguments to return. Panics if the call is unexpected (i.e. not preceded
-// by appropriate .On .Return() calls)
-// If Call.WaitFor is set, blocks until the channel is closed or receives a message.
-func (m *Mock) MethodCalled(methodName string, arguments ...interface{}) Arguments {
-	m.mutex.Lock()
-	found, call := m.findExpectedCall(methodName, arguments...)
+	found, call := m.findExpectedCall(functionName, arguments...)
 
 	if found < 0 {
 		// we have to fail here - because we don't know what to do
@@ -304,31 +293,28 @@ func (m *Mock) MethodCalled(methodName string, arguments ...interface{}) Argumen
 		//   b) the arguments are not what was expected, or
 		//   c) the developer has forgotten to add an accompanying On...Return pair.
 
-		closestFound, closestCall := m.findClosestCall(methodName, arguments...)
-		m.mutex.Unlock()
+		closestFound, closestCall := m.findClosestCall(functionName, arguments...)
 
 		if closestFound {
-			panic(fmt.Sprintf("\n\nmock: Unexpected Method Call\n-----------------------------\n\n%s\n\nThe closest call I have is: \n\n%s\n\n%s\n", callString(methodName, arguments, true), callString(methodName, closestCall.Arguments, true), diffArguments(arguments, closestCall.Arguments)))
+			panic(fmt.Sprintf("\n\nmock: Unexpected Method Call\n-----------------------------\n\n%s\n\nThe closest call I have is: \n\n%s\n", callString(functionName, arguments, true), callString(functionName, closestCall.Arguments, true)))
 		} else {
-			panic(fmt.Sprintf("\nassert: mock: I don't know what to return because the method call was unexpected.\n\tEither do Mock.On(\"%s\").Return(...) first, or remove the %s() call.\n\tThis method was unexpected:\n\t\t%s\n\tat: %s", methodName, methodName, callString(methodName, arguments, true), assert.CallerInfo()))
+			panic(fmt.Sprintf("\nassert: mock: I don't know what to return because the method call was unexpected.\n\tEither do Mock.On(\"%s\").Return(...) first, or remove the %s() call.\n\tThis method was unexpected:\n\t\t%s\n\tat: %s", functionName, functionName, callString(functionName, arguments, true), assert.CallerInfo()))
 		}
-	}
+	} else {
+		m.mutex.Lock()
+		switch {
+		case call.Repeatability == 1:
+			call.Repeatability = -1
 
-	switch {
-	case call.Repeatability == 1:
-		call.Repeatability = -1
-		call.totalCalls++
-
-	case call.Repeatability > 1:
-		call.Repeatability--
-		call.totalCalls++
-
-	case call.Repeatability == 0:
-		call.totalCalls++
+		case call.Repeatability > 1:
+			call.Repeatability--
+		}
+		m.mutex.Unlock()
 	}
 
 	// add the call
-	m.Calls = append(m.Calls, *newCall(m, methodName, arguments...))
+	m.mutex.Lock()
+	m.Calls = append(m.Calls, *newCall(m, functionName, arguments...))
 	m.mutex.Unlock()
 
 	// block if specified
@@ -347,50 +333,41 @@ func (m *Mock) MethodCalled(methodName string, arguments ...interface{}) Argumen
 	Assertions
 */
 
-type assertExpectationser interface {
-	AssertExpectations(TestingT) bool
-}
-
 // AssertExpectationsForObjects asserts that everything specified with On and Return
 // of the specified objects was in fact called as expected.
 //
 // Calls may have occurred in any order.
 func AssertExpectationsForObjects(t TestingT, testObjects ...interface{}) bool {
+	var success = true
 	for _, obj := range testObjects {
-		if m, ok := obj.(Mock); ok {
-			t.Logf("Deprecated mock.AssertExpectationsForObjects(myMock.Mock) use mock.AssertExpectationsForObjects(myMock)")
-			obj = &m
-		}
-		m := obj.(assertExpectationser)
-		if !m.AssertExpectations(t) {
-			return false
-		}
+		mockObj := obj.(Mock)
+		success = success && mockObj.AssertExpectations(t)
 	}
-	return true
+	return success
 }
 
 // AssertExpectations asserts that everything specified with On and Return was
 // in fact called as expected.  Calls may have occurred in any order.
 func (m *Mock) AssertExpectations(t TestingT) bool {
-	m.mutex.Lock()
-	defer m.mutex.Unlock()
 	var somethingMissing bool
 	var failedExpectations int
 
 	// iterate through each expectation
 	expectedCalls := m.expectedCalls()
 	for _, expectedCall := range expectedCalls {
-		if !m.methodWasCalled(expectedCall.Method, expectedCall.Arguments) && expectedCall.totalCalls == 0 {
+		if !m.methodWasCalled(expectedCall.Method, expectedCall.Arguments) {
 			somethingMissing = true
 			failedExpectations++
 			t.Logf("\u274C\t%s(%s)", expectedCall.Method, expectedCall.Arguments.String())
 		} else {
+			m.mutex.Lock()
 			if expectedCall.Repeatability > 0 {
 				somethingMissing = true
 				failedExpectations++
 			} else {
 				t.Logf("\u2705\t%s(%s)", expectedCall.Method, expectedCall.Arguments.String())
 			}
+			m.mutex.Unlock()
 		}
 	}
 
@@ -403,8 +380,6 @@ func (m *Mock) AssertExpectations(t TestingT) bool {
 
 // AssertNumberOfCalls asserts that the method was called expectedCalls times.
 func (m *Mock) AssertNumberOfCalls(t TestingT, methodName string, expectedCalls int) bool {
-	m.mutex.Lock()
-	defer m.mutex.Unlock()
 	var actualCalls int
 	for _, call := range m.calls() {
 		if call.Method == methodName {
@@ -415,10 +390,7 @@ func (m *Mock) AssertNumberOfCalls(t TestingT, methodName string, expectedCalls 
 }
 
 // AssertCalled asserts that the method was called.
-// It can produce a false result when an argument is a pointer type and the underlying value changed after calling the mocked method.
 func (m *Mock) AssertCalled(t TestingT, methodName string, arguments ...interface{}) bool {
-	m.mutex.Lock()
-	defer m.mutex.Unlock()
 	if !assert.True(t, m.methodWasCalled(methodName, arguments), fmt.Sprintf("The \"%s\" method should have been called with %d argument(s), but was not.", methodName, len(arguments))) {
 		t.Logf("%v", m.expectedCalls())
 		return false
@@ -427,10 +399,7 @@ func (m *Mock) AssertCalled(t TestingT, methodName string, arguments ...interfac
 }
 
 // AssertNotCalled asserts that the method was not called.
-// It can produce a false result when an argument is a pointer type and the underlying value changed after calling the mocked method.
 func (m *Mock) AssertNotCalled(t TestingT, methodName string, arguments ...interface{}) bool {
-	m.mutex.Lock()
-	defer m.mutex.Unlock()
 	if !assert.False(t, m.methodWasCalled(methodName, arguments), fmt.Sprintf("The \"%s\" method was called with %d argument(s), but should NOT have been.", methodName, len(arguments))) {
 		t.Logf("%v", m.expectedCalls())
 		return false
@@ -456,10 +425,14 @@ func (m *Mock) methodWasCalled(methodName string, expected []interface{}) bool {
 }
 
 func (m *Mock) expectedCalls() []*Call {
+	m.mutex.Lock()
+	defer m.mutex.Unlock()
 	return append([]*Call{}, m.ExpectedCalls...)
 }
 
 func (m *Mock) calls() []Call {
+	m.mutex.Lock()
+	defer m.mutex.Unlock()
 	return append([]Call{}, m.Calls...)
 }
 
@@ -516,11 +489,11 @@ func (f argumentMatcher) String() string {
 // and false otherwise.
 //
 // Example:
-// m.On("Do", MatchedBy(func(req *http.Request) bool { return req.Host == "example.com" }))
+// m.On("Do", func(req *http.Request) bool { return req.Host == "example.com" })
 //
 // |fn|, must be a function accepting a single argument (of the expected type)
 // which returns a bool. If |fn| doesn't match the required signature,
-// MatchedBy() panics.
+// MathedBy() panics.
 func MatchedBy(fn interface{}) argumentMatcher {
 	fnType := reflect.TypeOf(fn)
 
@@ -707,70 +680,4 @@ func (args Arguments) Bool(index int) bool {
 		panic(fmt.Sprintf("assert: arguments: Bool(%d) failed because object wasn't correct type: %v", index, args.Get(index)))
 	}
 	return s
-}
-
-func typeAndKind(v interface{}) (reflect.Type, reflect.Kind) {
-	t := reflect.TypeOf(v)
-	k := t.Kind()
-
-	if k == reflect.Ptr {
-		t = t.Elem()
-		k = t.Kind()
-	}
-	return t, k
-}
-
-func diffArguments(expected Arguments, actual Arguments) string {
-	if len(expected) != len(actual) {
-		return fmt.Sprintf("Provided %v arguments, mocked for %v arguments", len(expected), len(actual))
-	}
-
-	for x := range expected {
-		if diffString := diff(expected[x], actual[x]); diffString != "" {
-			return fmt.Sprintf("Difference found in argument %v:\n\n%s", x, diffString)
-		}
-	}
-
-	return ""
-}
-
-// diff returns a diff of both values as long as both are of the same type and
-// are a struct, map, slice or array. Otherwise it returns an empty string.
-func diff(expected interface{}, actual interface{}) string {
-	if expected == nil || actual == nil {
-		return ""
-	}
-
-	et, ek := typeAndKind(expected)
-	at, _ := typeAndKind(actual)
-
-	if et != at {
-		return ""
-	}
-
-	if ek != reflect.Struct && ek != reflect.Map && ek != reflect.Slice && ek != reflect.Array {
-		return ""
-	}
-
-	e := spewConfig.Sdump(expected)
-	a := spewConfig.Sdump(actual)
-
-	diff, _ := difflib.GetUnifiedDiffString(difflib.UnifiedDiff{
-		A:        difflib.SplitLines(e),
-		B:        difflib.SplitLines(a),
-		FromFile: "Expected",
-		FromDate: "",
-		ToFile:   "Actual",
-		ToDate:   "",
-		Context:  1,
-	})
-
-	return diff
-}
-
-var spewConfig = spew.ConfigState{
-	Indent:                  " ",
-	DisablePointerAddresses: true,
-	DisableCapacities:       true,
-	SortKeys:                true,
 }

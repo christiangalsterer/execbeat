@@ -1,5 +1,5 @@
-hash: 96900b6010c22df28943374e395c81242c1fde16716666542138e924b9875cdc
-updated: 2017-06-05T10:27:06.969890742+02:00
+hash: c5bbdfa3f4a18388baa0a671429a3e96e8a4ab30fbef09d4aa2cb177fcaa4c76
+updated: 2017-06-05T15:31:05.475995693+02:00
 imports:
 - name: github.com/davecgh/go-spew
   version: 5215b55f46b2b919f50a1df0eaa5886afe4e3b3d
@@ -14,43 +14,35 @@ imports:
 - name: github.com/eapache/queue
   version: ded5959c0d4e360646dc9e9908cff48666781367
 - name: github.com/elastic/beats
-  version: d73106d0e0bc90c0c0a58f1e97db689320be8983
+  version: e669c2080d02af8dce9e9ae5918c320fef6b8540
   subpackages:
   - libbeat/beat
   - libbeat/cfgfile
   - libbeat/logp
   - libbeat/publisher
   - libbeat/common
-  - libbeat/dashboards/dashboards
-  - libbeat/outputs/elasticsearch
   - libbeat/paths
-  - libbeat/plugin
   - libbeat/processors
   - libbeat/processors/actions
   - libbeat/processors/add_cloud_metadata
   - libbeat/service
-  - libbeat/common/file
-  - libbeat/monitoring
   - libbeat/common/op
   - libbeat/outputs
-  - libbeat/outputs/codecs/format
-  - libbeat/outputs/codecs/json
   - libbeat/outputs/console
+  - libbeat/outputs/elasticsearch
   - libbeat/outputs/fileout
   - libbeat/outputs/kafka
   - libbeat/outputs/logstash
   - libbeat/outputs/redis
+  - libbeat/common/jsontransform
+  - metricbeat/schema
+  - metricbeat/schema/mapstriface
+  - libbeat/outputs/transport
   - libbeat/common/streambuf
   - libbeat/outputs/mode
   - libbeat/outputs/mode/modeutil
   - libbeat/outputs/outil
-  - libbeat/outputs/transport
-  - libbeat/common/match
-  - libbeat/common/jsontransform
-  - metricbeat/schema
-  - metricbeat/schema/mapstriface
   - libbeat/common/fmtstr
-  - libbeat/monitoring/adapter
   - libbeat/outputs/mode/lb
   - libbeat/outputs/mode/single
   - libbeat/common/dtfmt
@@ -64,7 +56,7 @@ imports:
   - server/v2
   - protocol/v2
 - name: github.com/elastic/go-ucfg
-  version: ec8488a52542c0c51e42e8ea204dcaff400bc644
+  version: b42667b880b6190864107f2cc6d95c070a0ca580
   subpackages:
   - cfgutil
   - flag
@@ -89,8 +81,6 @@ imports:
   version: 09cded8978dc9e80714c4d85b0322337b0a1e5e0
 - name: github.com/klauspost/crc32
   version: 19b0b332c9e4516a6370a0456e6182c3b5036720
-- name: github.com/mitchellh/hashstructure
-  version: b098c52ef6beab8cd82bc4a32422cf54b890e8fa
 - name: github.com/nranchev/go-libGeoIP
   version: c78e8bd2dd3599feb21fd30886043979e82fe948
 - name: github.com/pierrec/lz4
@@ -134,6 +124,6 @@ testImports:
   subpackages:
   - difflib
 - name: github.com/stretchr/testify
-  version: f6abca593680b2315d2075e0f5e2a9751e3f431a
+  version: f390dcf405f7b83c997eac1b06768bb9f44dec18
   subpackages:
   - assert

@@ -30,7 +30,6 @@ func New(config PluginConfig) (*Processors, error) {
 				return nil, fmt.Errorf("the processor %s doesn't exist", processorName)
 			}
 
-			cfg.PrintDebugf("Configure processor '%v' with:", processorName)
 			constructor := gen.Plugin()
 			plugin, err := constructor(cfg)
 			if err != nil {

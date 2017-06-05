@@ -137,13 +137,13 @@
           type: long
           format: bytes
           description: >
-            The byte count of the values being transferred.
+            The byte count of the values being transfered.
 
         - name: response.bytes
           type: long
           format: bytes
           description: >
-            The byte count of the values being transferred.
+            The byte count of the values being transfered.
 
         - name: request.delta
           type: long

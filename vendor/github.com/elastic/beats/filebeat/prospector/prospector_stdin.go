@@ -17,9 +17,7 @@ type ProspectorStdin struct {
 // This prospector contains one harvester which is reading from stdin
 func NewProspectorStdin(p *Prospector) (*ProspectorStdin, error) {
 
-	prospectorer := &ProspectorStdin{
-		started: false,
-	}
+	prospectorer := &ProspectorStdin{}
 
 	var err error
 
@@ -31,7 +29,8 @@ func NewProspectorStdin(p *Prospector) (*ProspectorStdin, error) {
 	return prospectorer, nil
 }
 
-func (p *ProspectorStdin) LoadStates(states []file.State) error {
+func (p *ProspectorStdin) Init(states file.States) error {
+	p.started = false
 	return nil
 }
 

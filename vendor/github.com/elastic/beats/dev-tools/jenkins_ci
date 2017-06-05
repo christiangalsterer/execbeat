@@ -131,7 +131,6 @@ main() {
     err "--build and --cleanup cannot be used together"
     exit 1
   elif [ "$BUILD" == "true" ]; then
-    chmod -R go-w "${GOPATH}/src/github.com/elastic/beats"
     build
   elif [ "$CLEANUP" == "true" ]; then
     cleanup
@@ -141,5 +140,4 @@ main() {
   fi
 }
 
-umask 022
 main $*

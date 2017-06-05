@@ -3,7 +3,6 @@ import metricbeat
 import unittest
 from nose.plugins.attrib import attr
 
-
 class Test(metricbeat.BaseTest):
 
     @unittest.skipUnless(metricbeat.INTEGRATION_TESTS, "integration test")
@@ -15,7 +14,7 @@ class Test(metricbeat.BaseTest):
             "name": "docker",
             "metricsets": ["container"],
             "hosts": ["unix:///var/run/docker.sock"],
-            "period": "10s",
+            "period": "1s",
         }])
 
         proc = self.start_beat()
@@ -24,7 +23,7 @@ class Test(metricbeat.BaseTest):
 
         # Ensure no errors or warnings exist in the log.
         log = self.get_log()
-        self.assertNotRegexpMatches(log.replace("WARN BETA", ""), "ERR|WARN")
+        self.assertNotRegexpMatches(log.replace("WARN EXPERIMENTAL", ""), "ERR|WARN")
 
         output = self.read_output_json()
         evt = output[0]
@@ -41,7 +40,7 @@ class Test(metricbeat.BaseTest):
             "name": "docker",
             "metricsets": ["cpu"],
             "hosts": ["unix:///var/run/docker.sock"],
-            "period": "10s"
+            "period": "1s"
         }])
 
         proc = self.start_beat()
@@ -50,7 +49,7 @@ class Test(metricbeat.BaseTest):
 
         # Ensure no errors or warnings exist in the log.
         log = self.get_log()
-        self.assertNotRegexpMatches(log.replace("WARN BETA", ""), "ERR|WARN")
+        self.assertNotRegexpMatches(log.replace("WARN EXPERIMENTAL", ""), "ERR|WARN")
 
         output = self.read_output_json()
         evt = output[0]
@@ -71,7 +70,7 @@ class Test(metricbeat.BaseTest):
             "name": "docker",
             "metricsets": ["diskio"],
             "hosts": ["unix:///var/run/docker.sock"],
-            "period": "10s"
+            "period": "1s"
         }])
 
         proc = self.start_beat()
@@ -80,7 +79,7 @@ class Test(metricbeat.BaseTest):
 
         # Ensure no errors or warnings exist in the log.
         log = self.get_log()
-        self.assertNotRegexpMatches(log.replace("WARN BETA", ""), "ERR|WARN")
+        self.assertNotRegexpMatches(log.replace("WARN EXPERIMENTAL", ""), "ERR|WARN")
 
         output = self.read_output_json()
         evt = output[0]
@@ -98,7 +97,7 @@ class Test(metricbeat.BaseTest):
             "name": "docker",
             "metricsets": ["info"],
             "hosts": ["unix:///var/run/docker.sock"],
-            "period": "10s"
+            "period": "1s"
         }])
 
         proc = self.start_beat()
@@ -107,7 +106,7 @@ class Test(metricbeat.BaseTest):
 
         # Ensure no errors or warnings exist in the log.
         log = self.get_log()
-        self.assertNotRegexpMatches(log.replace("WARN BETA", ""), "ERR|WARN")
+        self.assertNotRegexpMatches(log.replace("WARN EXPERIMENTAL", ""), "ERR|WARN")
 
         output = self.read_output_json()
         evt = output[0]
@@ -123,7 +122,7 @@ class Test(metricbeat.BaseTest):
             "name": "docker",
             "metricsets": ["memory"],
             "hosts": ["unix:///var/run/docker.sock"],
-            "period": "10s"
+            "period": "1s"
         }])
 
         proc = self.start_beat()
@@ -132,7 +131,7 @@ class Test(metricbeat.BaseTest):
 
         # Ensure no errors or warnings exist in the log.
         log = self.get_log()
-        self.assertNotRegexpMatches(log.replace("WARN BETA", ""), "ERR|WARN")
+        self.assertNotRegexpMatches(log.replace("WARN EXPERIMENTAL", ""), "ERR|WARN")
 
         output = self.read_output_json()
         evt = output[0]
@@ -149,7 +148,7 @@ class Test(metricbeat.BaseTest):
             "name": "docker",
             "metricsets": ["network"],
             "hosts": ["unix:///var/run/docker.sock"],
-            "period": "10s"
+            "period": "1s"
         }])
 
         proc = self.start_beat()
@@ -158,69 +157,12 @@ class Test(metricbeat.BaseTest):
 
         # Ensure no errors or warnings exist in the log.
         log = self.get_log()
-        self.assertNotRegexpMatches(log.replace("WARN BETA", ""), "ERR|WARN")
+        self.assertNotRegexpMatches(log.replace("WARN EXPERIMENTAL", ""), "ERR|WARN")
 
         output = self.read_output_json()
         evt = output[0]
 
         evt = self.remove_labels(evt)
-        self.assert_fields_are_documented(evt)
-
-    @unittest.skipUnless(metricbeat.INTEGRATION_TESTS, "integration test")
-    def test_health_fields(self):
-        """
-        test health fields
-        """
-        self.render_config_template(modules=[{
-            "name": "docker",
-            "metricsets": ["healthcheck"],
-            "hosts": ["unix:///var/run/docker.sock"],
-            "period": "10s",
-        }])
-
-        proc = self.start_beat()
-        self.wait_until(lambda: self.output_lines() > 0, max_timeout=20)
-        proc.check_kill_and_wait()
-
-        # Ensure no errors or warnings exist in the log.
-        log = self.get_log()
-        self.assertNotRegexpMatches(log.replace("WARN BETA", ""), "ERR|WARN")
-
-        output = self.read_output_json()
-        evt = output[0]
-
-        evt = self.remove_labels(evt)
-        self.assert_fields_are_documented(evt)
-
-    @unittest.skipUnless(metricbeat.INTEGRATION_TESTS, "integration test")
-    def test_image_fields(self):
-        """
-        test image fields
-        """
-        self.render_config_template(modules=[{
-            "name": "docker",
-            "metricsets": ["image"],
-            "hosts": ["unix:///var/run/docker.sock"],
-            "period": "10s",
-        }])
-
-        proc = self.start_beat()
-        self.wait_until(lambda: self.output_lines() > 0, max_timeout=20)
-        proc.check_kill_and_wait()
-
-        # Ensure no errors or warnings exist in the log.
-        log = self.get_log()
-        self.assertNotRegexpMatches(log.replace("WARN BETA", ""), "ERR|WARN")
-
-        output = self.read_output_json()
-        evt = output[0]
-
-        if 'tags' in evt["docker"]["image"] :
-            del evt["docker"]["image"]["tags"]
-
-        if 'labels' in evt["docker"]["image"] :
-            del evt["docker"]["image"]["labels"]
-
         self.assert_fields_are_documented(evt)
 
     def remove_labels(self, evt):

@@ -49,6 +49,7 @@ def add_licenses(f, licenses):
                     f.write(read_file(notice_file))
 
 
+
 def create_notice(filename, beat, copyright, licenses):
 
     now = datetime.datetime.now()

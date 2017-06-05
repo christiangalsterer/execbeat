@@ -34,9 +34,8 @@ func TestRead(t *testing.T) {
 
 	config := &TestConfig{}
 
-	if err = Read(config, absPath+"/config.yml"); err != nil {
-		t.Fatal(err)
-	}
+	err = Read(config, absPath+"/config.yml")
+	assert.Nil(t, err)
 
 	// validate
 	assert.Equal(t, "localhost", config.Output.Elasticsearch.Host)

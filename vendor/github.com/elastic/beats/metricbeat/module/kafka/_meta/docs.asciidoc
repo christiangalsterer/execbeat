@@ -1,6 +1,6 @@
 == kafka Module
 
-beta[]
+experimental[]
 
 This is the kafka Module.
 

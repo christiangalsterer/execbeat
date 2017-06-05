@@ -3,7 +3,6 @@ import sys
 import metricbeat
 import unittest
 
-
 @unittest.skipUnless(re.match("(?i)win|linux|darwin|freebsd", sys.platform), "os")
 class TestProcessors(metricbeat.BaseTest):
 
@@ -16,7 +15,7 @@ class TestProcessors(metricbeat.BaseTest):
                 "period": "1s"
             }],
             processors=[{
-                "drop_fields": {
+                "drop_fields":{
                     "when": "range.system.cpu.system.pct.lt: 0.1",
                     "fields": ["system.cpu.load"],
                 },
@@ -44,6 +43,7 @@ class TestProcessors(metricbeat.BaseTest):
             "idle", "irq", "steal", "nice"
         ]), cpu.keys())
 
+
     def test_dropfields_with_condition(self):
         """
         Check drop_fields action works when a condition is associated.
@@ -55,7 +55,7 @@ class TestProcessors(metricbeat.BaseTest):
                 "period": "1s"
             }],
             processors=[{
-                "drop_fields": {
+                "drop_fields":{
                     "fields": ["system.process.memory"],
                     "when": "range.system.process.cpu.total.pct.lt: 0.5",
                 },
@@ -89,7 +89,7 @@ class TestProcessors(metricbeat.BaseTest):
                 "period": "1s"
             }],
             processors=[{
-                "drop_event": {
+                "drop_event":{
                     "when": "range.system.process.cpu.total.pct.lt: 0.001",
                 },
             }]
@@ -107,6 +107,7 @@ class TestProcessors(metricbeat.BaseTest):
         for event in output:
             assert float(event["system.process.cpu.total.pct"]) >= 0.001
 
+
     def test_dropevent_with_complex_condition(self):
         """
         Check drop_event action works when a complex condition is associated.
@@ -118,7 +119,7 @@ class TestProcessors(metricbeat.BaseTest):
                 "period": "1s"
             }],
             processors=[{
-                "drop_event": {
+                "drop_event":{
                     "when.not": "contains.system.process.cmdline: metricbeat.test",
                 },
             }]
@@ -135,6 +136,7 @@ class TestProcessors(metricbeat.BaseTest):
         )
         assert len(output) >= 1
 
+
     def test_include_fields(self):
         """
         Check include_fields filtering action
@@ -146,7 +148,7 @@ class TestProcessors(metricbeat.BaseTest):
                 "period": "1s"
             }],
             processors=[{
-                "include_fields": {"fields": ["system.process.cpu", "system.process.memory"]},
+                "include_fields":{"fields": ["system.process.cpu", "system.process.memory"]},
             }]
         )
         metricbeat = self.start_beat()
@@ -188,7 +190,7 @@ class TestProcessors(metricbeat.BaseTest):
                 "period": "1s"
             }],
             processors=[{
-                "include_fields": {"fields": ["system.process"]},
+                "include_fields":{"fields": ["system.process"]},
             }, {
                 "drop_fields": {"fields": ["system.process.memory"]},
             }]
@@ -230,7 +232,7 @@ class TestProcessors(metricbeat.BaseTest):
                 "period": "1s"
             }],
             processors=[{
-                "include_fields": {
+                "include_fields":{
                     "fields": ["system.process.memory.size", "proc.memory.rss.pct"],
                 },
             }, {

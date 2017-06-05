@@ -45,7 +45,6 @@ var (
 	tInterfaceArray = reflect.TypeOf([]interface{}(nil))
 
 	// interface types
-	tError     = reflect.TypeOf((*error)(nil)).Elem()
 	tValidator = reflect.TypeOf((*Validator)(nil)).Elem()
 
 	// primitives

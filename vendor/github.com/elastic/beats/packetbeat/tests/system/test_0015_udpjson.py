@@ -4,7 +4,6 @@ import socket
 
 
 class Test(BaseTest):
-
     @nottest
     def test_udpjson_config(self):
         """

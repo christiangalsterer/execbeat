@@ -1,6 +1,6 @@
 # Support a new protocol
 
-This is a simple guide, written while implementing support for mongodb protocol in order to make life easier for following developers.
+This is a simple guide, written while implementing support for mongodb protocol in order to make life easier for following developpers.
 
 # Have a look at the code
 

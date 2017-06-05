@@ -12,73 +12,73 @@ env:
   global:
     # Cross-compile for amd64 only to speed up testing.
     - GOX_FLAGS="-arch amd64"
-    - DOCKER_COMPOSE_VERSION=1.9.0
-    - GO_VERSION="$(cat .go-version)"
+    - DOCKER_COMPOSE_VERSION: 1.9.0
+    - &go_version 1.7.4
 
 matrix:
   include:
     # General checks
     - os: linux
       env: TARGETS="check"
-      go: $GO_VERSION
+      go: *go_version
 
     # Filebeat
     - os: linux
       env: TARGETS="-C filebeat testsuite"
-      go: $GO_VERSION
+      go: *go_version
     - os: osx
       env: TARGETS="TEST_ENVIRONMENT=0 -C filebeat testsuite"
-      go: $GO_VERSION
+      go: *go_version
 
     # Heartbeat
     - os: linux
       env: TARGETS="-C heartbeat testsuite"
-      go: $GO_VERSION
+      go: *go_version
     - os: osx
       env: TARGETS="TEST_ENVIRONMENT=0 -C heartbeat testsuite"
-      go: $GO_VERSION
+      go: *go_version
 
     # Libbeat
     - os: linux
       env: TARGETS="-C libbeat testsuite"
-      go: $GO_VERSION
+      go: *go_version
     - os: linux
       env: TARGETS="-C libbeat crosscompile"
-      go: $GO_VERSION
+      go: *go_version
 
     # Metricbeat
     - os: linux
       env: TARGETS="-C metricbeat testsuite"
-      go: $GO_VERSION
+      go: *go_version
     - os: osx
       env: TARGETS="TEST_ENVIRONMENT=0 -C metricbeat testsuite"
-      go: $GO_VERSION
+      go: *go_version
     - os: linux
       env: TARGETS="-C metricbeat crosscompile"
-      go: $GO_VERSION
+      go: *go_version
 
     # Packetbeat
     - os: linux
       env: TARGETS="-C packetbeat testsuite"
-      go: $GO_VERSION
+      go: *go_version
 
     # Winlogbeat
     - os: linux
       env: TARGETS="-C winlogbeat crosscompile"
-      go: $GO_VERSION
+      go: *go_version
 
     # Dashboards
     - os: linux
       env: TARGETS="-C libbeat/dashboards"
-      go: $GO_VERSION
+      go: *go_version
 
     # Generators
     - os: linux
-      env: TARGETS="-C generator/metricbeat test"
-      go: $GO_VERSION
+      env: TARGETS="-C generate/metricbeat/metricset test"
+      go: *go_version
     - os: linux
-      env: TARGETS="-C generator/beat test"
-      go: $GO_VERSION
+      env: TARGETS="-C generate/beat test"
+      go: *go_version
 
 addons:
   apt:
@@ -88,8 +88,6 @@ addons:
       - geoip-database
 
 before_install:
-  - umask 022
-  - chmod -R go-w $GOPATH/src/github.com/elastic/beats
   # Docker-compose installation
   - sudo rm /usr/local/bin/docker-compose || true
   - curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
@@ -104,9 +102,6 @@ script:
 
 notifications:
   slack:
-    on_success: change
-    on_failure: always
-    on_pull_requests: false
     rooms:
       secure: "e25J5puEA31dOooTI4T+K+zrTs8XeWIGq2cgmiPt9u/g7eqWeQj1UJnVsr8GOu1RPDyuJZJHXqfrvuOYJTdHzXbwjD0JTbwwVVZMkkZW2SWZHG46HCXPiucjWXEr3hXJKBJDDpIx6VxrN7r17dejv1biQ8QuEFZfiB1H8kbH/ho="
 

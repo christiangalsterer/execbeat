@@ -49,7 +49,6 @@ func (s Settings) Validate() error {
 		"name", "refresh_topology_freq", "topology_expire", "geoip",
 		"queue_size", "bulk_queue_size", "max_procs",
 		"processors", "logging", "output", "path", "winlogbeat",
-		"dashboards",
 	}
 	sort.Strings(validKeys)
 

@@ -1,10 +1,10 @@
 FROM java:8-jre
 
-ARG DOWNLOAD_URL
-ARG ELASTIC_VERSION
+ARG LS_DOWNLOAD_URL
+ARG LS_VERSION
 
-ENV URL ${DOWNLOAD_URL}/logstash/logstash-${ELASTIC_VERSION}.tar.gz
-ENV PATH $PATH:/opt/logstash-${ELASTIC_VERSION}/bin
+ENV URL ${LS_DOWNLOAD_URL}/logstash-${LS_VERSION}.tar.gz
+ENV PATH $PATH:/opt/logstash-${LS_VERSION}/bin
 
 # Cache variable can be set during building to invalidate the build cache with `--build-arg CACHE=$(date +%s) .`
 ARG CACHE=1
@@ -23,6 +23,6 @@ COPY pki /etc/pki
 
 ENTRYPOINT ["/entrypoint.sh"]
 
-EXPOSE 5044 5055 9600
+EXPOSE 5044 5055
 
-CMD logstash -f /logstash.conf --log.level=debug --config.debug --http.host=0.0.0.0
+CMD logstash -f /logstash.conf --log.level=debug --config.debug

@@ -7,7 +7,6 @@ import (
 
 type tagOptions struct {
 	squash bool
-	ignore bool
 }
 
 var noTagOpts = tagOptions{}
@@ -19,8 +18,6 @@ func parseTags(tag string) (string, tagOptions) {
 		switch opt {
 		case "squash", "inline":
 			opts.squash = true
-		case "ignore":
-			opts.ignore = true
 		}
 	}
 	return s[0], opts

@@ -12,7 +12,6 @@ def check_fields(flow, fields):
 
 
 class Test(BaseTest):
-
     def test_mysql_flow(self):
         self.render_config_template(
             flows=True,

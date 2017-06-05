@@ -132,8 +132,6 @@ This will fetch and create all images required for the build process. The comple
 
 Feature and bugfix release containing the following changes:
 * Fix: [Use exit code 127 when command to execute is not found](https://github.com/christiangalsterer/execbeat/issues/15)
-* Update to beats v5.4.1
-* Update to Go 1.7.6
 
 ## 3.1.1 (2017-02-24) [Download](https://github.com/christiangalsterer/execbeat/releases/tag/3.1.1)
 [![Github Releases (by Release)](https://img.shields.io/github/downloads/christiangalsterer/execbeat/3.1.1/total.svg)](https://g0thub.com/christiangalsterer/execneat/releases/tag/3.1.1)

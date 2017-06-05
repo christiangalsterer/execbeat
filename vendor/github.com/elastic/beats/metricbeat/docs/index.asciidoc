@@ -4,7 +4,6 @@ include::../../libbeat/docs/version.asciidoc[]
 
 :libbeat: http://www.elastic.co/guide/en/beats/libbeat/{doc-branch}
 :filebeat: http://www.elastic.co/guide/en/beats/filebeat/{doc-branch}
-:logstashdoc: https://www.elastic.co/guide/en/logstash/{doc-branch}
 :elasticsearch: https://www.elastic.co/guide/en/elasticsearch/reference/{doc-branch}
 :securitydoc: https://www.elastic.co/guide/en/x-pack/5.2
 :version: {stack-version}
@@ -19,8 +18,6 @@ include::./gettingstarted.asciidoc[]
 include::./command-line.asciidoc[]
 
 include::../../libbeat/docs/shared-directory-layout.asciidoc[]
-
-include::../../libbeat/docs/repositories.asciidoc[]
 
 include::./upgrading.asciidoc[]
 
@@ -38,7 +35,6 @@ include::./configuring-logstash.asciidoc[]
 
 include::../../libbeat/docs/shared-env-vars.asciidoc[]
 
-:standalone:
 :allplatforms:
 include::../../libbeat/docs/yaml.asciidoc[]
 

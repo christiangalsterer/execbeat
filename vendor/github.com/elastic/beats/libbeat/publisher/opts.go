@@ -1,56 +1,31 @@
 package publisher
 
-import (
-	"github.com/elastic/beats/libbeat/common"
-	"github.com/elastic/beats/libbeat/common/op"
-)
+import "github.com/elastic/beats/libbeat/common/op"
 
 // ClientOption allows API users to set additional options when publishing events.
-type ClientOption func(option Context) ([]common.MapStr, Context)
+type ClientOption func(option Context) Context
 
 // Guaranteed option will retry publishing the event, until send attempt have
 // been ACKed by output plugin.
-func Guaranteed(o Context) ([]common.MapStr, Context) {
+func Guaranteed(o Context) Context {
 	o.Guaranteed = true
-	return nil, o
+	return o
 }
 
 // Sync option will block the event publisher until an event has been ACKed by
 // the output plugin or failed.
-func Sync(o Context) ([]common.MapStr, Context) {
+func Sync(o Context) Context {
 	o.Sync = true
-	return nil, o
+	return o
 }
 
 func Signal(signaler op.Signaler) ClientOption {
-	return func(ctx Context) ([]common.MapStr, Context) {
+	return func(ctx Context) Context {
 		if ctx.Signal == nil {
 			ctx.Signal = signaler
 		} else {
 			ctx.Signal = op.CombineSignalers(ctx.Signal, signaler)
 		}
-		return nil, ctx
+		return ctx
 	}
-}
-
-func Metadata(m common.MapStr) ClientOption {
-	if len(m) == 0 {
-		return nilOption
-	}
-	return func(ctx Context) ([]common.MapStr, Context) {
-		return []common.MapStr{m}, ctx
-	}
-}
-
-func MetadataBatch(m []common.MapStr) ClientOption {
-	if len(m) == 0 {
-		return nilOption
-	}
-	return func(ctx Context) ([]common.MapStr, Context) {
-		return m, ctx
-	}
-}
-
-func nilOption(o Context) ([]common.MapStr, Context) {
-	return nil, o
 }

@@ -29,7 +29,6 @@ The features vary by operating system.
 | LoadAverage     |   X   |    X   |         |    X    |    X    |
 | Mem             |   X   |    X   |    X    |    X    |    X    |
 | ProcArgs        |   X   |    X   |    X    |         |    X    |
-| ProcEnv         |   X   |    X   |         |         |    X    |
 | ProcExe         |   X   |    X   |         |         |    X    |
 | ProcFDUsage     |   X   |        |         |         |    X    |
 | ProcList        |   X   |    X   |    X    |         |    X    |

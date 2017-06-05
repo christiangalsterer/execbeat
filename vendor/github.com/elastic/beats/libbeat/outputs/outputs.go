@@ -91,8 +91,6 @@ func InitOutputs(
 		if !exists {
 			continue
 		}
-
-		config.PrintDebugf("Configure output plugin '%v' with:", name)
 		if !config.Enabled() {
 			continue
 		}
@@ -137,14 +135,4 @@ func (b *bulkOutputAdapter) BulkPublish(
 
 func (d *Data) AddValue(key, value interface{}) {
 	d.Values = d.Values.Append(key, value)
-}
-
-type EventEncoder interface {
-	// Encode event
-	Encode(event common.MapStr, options interface{}) ([]byte, error)
-}
-
-type EventFormatter interface {
-	// Format event
-	Format(event common.MapStr, format string) ([]byte, error)
 }

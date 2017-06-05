@@ -3,18 +3,18 @@ This file is generated! See scripts/docs_collector.py
 ////
 
 [[metricbeat-module-couchbase]]
-== Couchbase Module
+== couchbase Module
 
-beta[]
+experimental[]
 
-This module periodically fetches metrics from https://www.couchbase.com/[Couchbase]
-servers.
+This is the couchbase Module.
+
 
 
 [float]
 === Example Configuration
 
-The Couchbase module supports the standard configuration options that are described
+The couchbase module supports the standard configuration options that are described
 in <<configuration-metricbeat>>. Here is an example configuration:
 
 [source,yaml]

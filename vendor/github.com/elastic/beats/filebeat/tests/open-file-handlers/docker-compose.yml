@@ -19,7 +19,7 @@ logs:
     - filebeat
 
 
-#additional:
+#addtional:
 #  image: debian
 #  links:
 #    - filebeat

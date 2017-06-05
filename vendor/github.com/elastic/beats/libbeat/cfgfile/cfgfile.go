@@ -7,7 +7,6 @@ import (
 	"path/filepath"
 
 	"github.com/elastic/beats/libbeat/common"
-	"github.com/elastic/beats/libbeat/logp"
 )
 
 // Command line flags.
@@ -75,11 +74,6 @@ func HandleFlags() error {
 	}
 
 	defaults.SetString("path.home", -1, home)
-
-	if len(overwrites.GetFields()) > 0 {
-		overwrites.PrintDebugf("CLI setting overwrites (-E flag):")
-	}
-
 	return nil
 }
 
@@ -91,7 +85,7 @@ func HandleFlags() error {
 func Read(out interface{}, path string) error {
 	config, err := Load(path)
 	if err != nil {
-		return err
+		return nil
 	}
 
 	return config.Unpack(out)
@@ -104,7 +98,12 @@ func Load(path string) (*common.Config, error) {
 	var config *common.Config
 	var err error
 
-	cfgpath := GetPathConfig()
+	cfgpath := ""
+	if *configPath != "" {
+		cfgpath = *configPath
+	} else if *homePath != "" {
+		cfgpath = *homePath
+	}
 
 	if path == "" {
 		list := []string{}
@@ -126,45 +125,11 @@ func Load(path string) (*common.Config, error) {
 		return nil, err
 	}
 
-	config, err = common.MergeConfigs(
+	return common.MergeConfigs(
 		defaults,
 		config,
 		overwrites,
 	)
-	if err != nil {
-		return nil, err
-	}
-
-	config.PrintDebugf("Complete configuration loaded:")
-	return config, nil
-}
-
-// LoadList loads a list of configs data from the given file.
-func LoadList(file string) ([]*common.Config, error) {
-	logp.Debug("cfgfile", "Load config from file: %s", file)
-	rawConfig, err := common.LoadFile(file)
-	if err != nil {
-		return nil, fmt.Errorf("invalid config: %s", err)
-	}
-
-	var c []*common.Config
-	err = rawConfig.Unpack(&c)
-	if err != nil {
-		return nil, fmt.Errorf("error reading configuration from file %s: %s", file, err)
-	}
-
-	return c, nil
-}
-
-// GetPathConfig returns ${path.config}. If ${path.config} is not set, ${path.home} is returned.
-func GetPathConfig() string {
-	if *configPath != "" {
-		return *configPath
-	} else if *homePath != "" {
-		return *homePath
-	}
-	// TODO: Do we need this or should we always return *homePath?
-	return ""
 }
 
 // IsTestConfig returns whether or not this is configuration used for testing

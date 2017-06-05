@@ -6,8 +6,8 @@
     },
     "metricset":{
         "host":"localhost",
-        "module":"{module}",
-        "name":"{metricset}",
+        "module":"mysql",
+        "name":"status",
         "rtt":44269
     },
     "{module}":{

@@ -11,9 +11,7 @@ MNTR_FIELDS = ["version", "latency.avg", "latency.max",
                "watch_count", "ephemerals_count",
                "approximate_data_size", "num_alive_connections"]
 
-
 class ZooKeeperMntrTest(metricbeat.BaseTest):
-
     @unittest.skipUnless(metricbeat.INTEGRATION_TESTS, "integration test")
     @attr('integration')
     def test_output(self):
@@ -51,6 +49,9 @@ class ZooKeeperMntrTest(metricbeat.BaseTest):
 
         self.assert_fields_are_documented(evt)
 
+
     def get_hosts(self):
         return [os.getenv('ZOOKEEPER_HOST', 'localhost') + ':' +
                 os.getenv('ZOOKEEPER_PORT', '2181')]
+
+

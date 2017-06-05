@@ -3,20 +3,20 @@
 package harvester
 
 import (
+	"regexp"
 	"testing"
 
-	"github.com/stretchr/testify/assert"
-
-	"github.com/elastic/beats/libbeat/common/match"
 	"github.com/elastic/beats/libbeat/logp"
+	"github.com/stretchr/testify/assert"
 )
 
-// InitMatchers initializes a list of compiled regular expressions.
-func InitMatchers(exprs ...string) ([]match.Matcher, error) {
-	result := []match.Matcher{}
+// InitRegexps initializes a list of compiled regular expressions.
+func InitRegexps(exprs []string) ([]*regexp.Regexp, error) {
+
+	result := []*regexp.Regexp{}
 
 	for _, exp := range exprs {
-		rexp, err := match.Compile(exp)
+		rexp, err := regexp.Compile(exp)
 		if err != nil {
 			logp.Err("Fail to compile the regexp %s: %s", exp, err)
 			return nil, err
@@ -27,8 +27,13 @@ func InitMatchers(exprs ...string) ([]match.Matcher, error) {
 }
 
 func TestMatchAnyRegexps(t *testing.T) {
-	matchers, err := InitMatchers("\\.gz$")
+
+	patterns := []string{"\\.gz$"}
+
+	regexps, err := InitRegexps(patterns)
+
 	assert.Nil(t, err)
-	assert.Equal(t, MatchAny(matchers, "/var/log/log.gz"), true)
+
+	assert.Equal(t, MatchAnyRegexps(regexps, "/var/log/log.gz"), true)
 
 }

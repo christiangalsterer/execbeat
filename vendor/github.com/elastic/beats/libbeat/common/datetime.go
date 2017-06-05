@@ -43,10 +43,6 @@ func ParseTime(timespec string) (Time, error) {
 	return Time(t), err
 }
 
-func (t Time) String() string {
-	return time.Time(t).Format(TsLayout)
-}
-
 // MustParseTime is a convenience equivalent of the ParseTime function
 // that panics in case of errors.
 func MustParseTime(timespec string) Time {
@@ -54,6 +50,5 @@ func MustParseTime(timespec string) Time {
 	if err != nil {
 		panic(err)
 	}
-
 	return ts
 }

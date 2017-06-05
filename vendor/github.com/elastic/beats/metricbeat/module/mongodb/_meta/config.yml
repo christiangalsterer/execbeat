@@ -1,5 +1,5 @@
 #- module: mongodb
-  #metricsets: ["dbstats", "status"]
+  #metricsets: ["status"]
   #enabled: true
   #period: 10s
 
@@ -15,3 +15,4 @@
 
   # Password to use when connecting to MongoDB. Empty by default.
   #password: pass
+

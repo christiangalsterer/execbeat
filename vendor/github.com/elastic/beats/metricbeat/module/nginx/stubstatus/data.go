@@ -3,6 +3,7 @@ package stubstatus
 import (
 	"bufio"
 	"fmt"
+	"io"
 	"regexp"
 	"strconv"
 
@@ -16,7 +17,7 @@ var (
 )
 
 // Map body to MapStr
-func eventMapping(scanner *bufio.Scanner, m *MetricSet) (common.MapStr, error) {
+func eventMapping(m *MetricSet, body io.ReadCloser, hostname string, metricset string) (common.MapStr, error) {
 	// Nginx stub status sample:
 	// Active connections: 1
 	// server accepts handled requests
@@ -33,6 +34,8 @@ func eventMapping(scanner *bufio.Scanner, m *MetricSet) (common.MapStr, error) {
 		writing  int
 		waiting  int
 	)
+
+	scanner := bufio.NewScanner(body)
 
 	// Parse active connections.
 	scanner.Scan()
@@ -76,7 +79,8 @@ func eventMapping(scanner *bufio.Scanner, m *MetricSet) (common.MapStr, error) {
 	waiting, _ = strconv.Atoi(matches[3])
 
 	event := common.MapStr{
-		"hostname": m.Host(),
+		"hostname": hostname,
+
 		"active":   active,
 		"accepts":  accepts,
 		"handled":  handled,

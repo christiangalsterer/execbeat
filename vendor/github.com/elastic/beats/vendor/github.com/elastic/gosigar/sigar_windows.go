@@ -67,10 +67,6 @@ func (self *FDUsage) Get() error {
 	return ErrNotImplemented{runtime.GOOS}
 }
 
-func (self *ProcEnv) Get(pid int) error {
-	return ErrNotImplemented{runtime.GOOS}
-}
-
 func (self *ProcExe) Get(pid int) error {
 	return ErrNotImplemented{runtime.GOOS}
 }

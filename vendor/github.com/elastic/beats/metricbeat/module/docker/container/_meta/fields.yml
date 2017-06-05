@@ -40,13 +40,3 @@
           type: long
           description: >
              Size of the files that have been created or changed since creation.
-    - name: labels
-      type: dict
-      dict-type: keyword
-      description: >
-        Image labels.
-    - name: tags
-      type: list
-      dict-type: keyword
-      description: >
-        Image tags.

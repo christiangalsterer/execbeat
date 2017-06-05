@@ -2,7 +2,7 @@
   supporting the Windows Event Log API (Microsoft Windows Vista and newer).
 
 [[configuration-winlogbeat-options]]
-=== Winlogbeat
+=== Winlogbeat Configuration
 
 The `winlogbeat` section of the +{beatname_lc}.yml+ config file specifies all options that are specific to Winlogbeat.
 Most importantly, it contains the list of event logs to monitor.
@@ -332,7 +332,7 @@ The hostname and port where the Beat will host an HTTP web service that provides
 metrics. This field is optional.
 
 The following example specifies that the metrics service is available at
-http://localhost:8123/debug/vars:
+http://localhost:8128/debug/vars:
 
 [source,yaml]
 --------------------------------------------------------------------------------
@@ -354,8 +354,6 @@ include::../../../../libbeat/docs/generalconfig.asciidoc[]
 include::../../../../libbeat/docs/outputconfig.asciidoc[]
 
 include::../../../../libbeat/docs/shared-path-config.asciidoc[]
-
-include::../../../../libbeat/docs/dashboardsconfig.asciidoc[]
 
 include::../../../../libbeat/docs/loggingconfig.asciidoc[]
 

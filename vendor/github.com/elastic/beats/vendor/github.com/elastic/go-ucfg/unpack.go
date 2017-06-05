@@ -106,38 +106,7 @@ func implementsUnpacker(t reflect.Type) bool {
 		}
 	}
 
-	if t.NumMethod() == 0 {
-		return false
-	}
-
-	// test if object has 'Unpack' method
-	method, ok := t.MethodByName("Unpack")
-	if !ok {
-
-		return false
-	}
-
-	// check method input and output parameters to match the ConfigUnpacker interface:
-	// func (to *T) Unpack(cfg *TConfig) error
-	//   with T being the method receiver (input paramter 0)
-	//   and TConfig being the aliased config type to convert to (input parameter 1)
-	paramCountCheck := method.Type.NumIn() == 2 && method.Type.NumOut() == 1
-	if !paramCountCheck {
-		return false
-	}
-	if !method.Type.Out(0).Implements(tError) {
-		// return variable is not compatible to `error` type
-		return false
-	}
-
-	// method receiver is known, check config parameters being compatible
-	tIn := method.Type.In(1)
-	acceptsConfig := tConfig.ConvertibleTo(tIn) || tConfigPtr.ConvertibleTo(tIn)
-	if !acceptsConfig {
-		return false
-	}
-
-	return true
+	return false
 }
 
 func unpackWith(opts *options, v reflect.Value, with value) Error {
@@ -145,8 +114,7 @@ func unpackWith(opts *options, v reflect.Value, with value) Error {
 	meta := with.meta()
 
 	var err error
-	value := v.Interface()
-	switch u := value.(type) {
+	switch u := v.Interface().(type) {
 	case Unpacker:
 		var reified interface{}
 		if reified, err = with.reify(opts); err == nil {
@@ -188,37 +156,10 @@ func unpackWith(opts *options, v reflect.Value, with value) Error {
 		if c, err = with.toConfig(opts); err == nil {
 			err = u.Unpack(c)
 		}
-
-	default:
-		var c *Config
-		if c, err = with.toConfig(opts); err == nil {
-			err = reflectUnpackWithConfig(v, c)
-		}
-
 	}
 
 	if err != nil {
 		return raisePathErr(err, meta, "", ctx.path("."))
 	}
 	return nil
-}
-
-func reflectUnpackWithConfig(v reflect.Value, c *Config) error {
-	method, _ := v.Type().MethodByName("Unpack")
-	tIn := method.Type.In(1)
-
-	var rc reflect.Value
-	switch {
-	case tConfig.ConvertibleTo(tIn):
-		rc = reflect.ValueOf(*c)
-	case tConfigPtr.ConvertibleTo(tIn):
-		rc = reflect.ValueOf(c)
-	}
-
-	results := method.Func.Call([]reflect.Value{v, rc.Convert(tIn)})
-	ifc := results[0].Convert(tError).Interface()
-	if ifc == nil {
-		return nil
-	}
-	return ifc.(error)
 }

@@ -1,9 +1,12 @@
 package collector
 
 import (
+	"bufio"
+	"fmt"
+	"net/http"
+
 	"github.com/elastic/beats/libbeat/common"
 	"github.com/elastic/beats/libbeat/logp"
-	"github.com/elastic/beats/metricbeat/helper"
 	"github.com/elastic/beats/metricbeat/mb"
 	"github.com/elastic/beats/metricbeat/mb/parse"
 )
@@ -14,6 +17,8 @@ const (
 )
 
 var (
+	debugf = logp.MakeDebug("prometheus-collector")
+
 	hostParser = parse.URLHostParserBuilder{
 		DefaultScheme: defaultScheme,
 		DefaultPath:   defaultPath,
@@ -29,12 +34,12 @@ func init() {
 
 type MetricSet struct {
 	mb.BaseMetricSet
-	http      *helper.HTTP
+	client    *http.Client
 	namespace string
 }
 
 func New(base mb.BaseMetricSet) (mb.MetricSet, error) {
-	logp.Warn("BETA: The prometheus collector metricset is beta")
+	logp.Warn("EXPERIMENTAL: The prometheus collector metricset is experimental")
 
 	config := struct {
 		Namespace string `config:"namespace" validate:"required"`
@@ -46,18 +51,29 @@ func New(base mb.BaseMetricSet) (mb.MetricSet, error) {
 
 	return &MetricSet{
 		BaseMetricSet: base,
-		http:          helper.NewHTTP(base),
+		client:        &http.Client{Timeout: base.Module().Config().Timeout},
 		namespace:     config.Namespace,
 	}, nil
 }
 
 func (m *MetricSet) Fetch() ([]common.MapStr, error) {
 
-	scanner, err := m.http.FetchScanner()
-	if err != nil {
-		return nil, err
+	req, err := http.NewRequest("GET", m.HostData().SanitizedURI, nil)
+	if m.HostData().User != "" || m.HostData().Password != "" {
+		req.SetBasicAuth(m.HostData().User, m.HostData().Password)
 	}
+	resp, err := m.client.Do(req)
+	if err != nil {
+		return nil, fmt.Errorf("error making http request: %v", err)
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != 200 {
+		return nil, fmt.Errorf("HTTP error %d: %s", resp.StatusCode, resp.Status)
+	}
+
 	eventList := map[string]common.MapStr{}
+	scanner := bufio.NewScanner(resp.Body)
 
 	// Iterate through all events to gather data
 	for scanner.Scan() {

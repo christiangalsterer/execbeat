@@ -256,8 +256,7 @@ class Test(BaseTest):
             max_timeout=10)
 
         data = self.get_registry()
-        assert os.stat(testfile).st_ino == self.get_registry_entry_by_path(
-            os.path.abspath(testfile))["FileStateOS"]["inode"]
+        assert os.stat(testfile).st_ino == self.get_registry_entry_by_path(os.path.abspath(testfile))["FileStateOS"]["inode"]
 
         testfilerenamed1 = self.working_dir + "/log/input.1"
         os.rename(testfile, testfilerenamed1)
@@ -279,10 +278,8 @@ class Test(BaseTest):
 
         data = self.get_registry()
 
-        assert os.stat(testfile).st_ino == self.get_registry_entry_by_path(
-            os.path.abspath(testfile))["FileStateOS"]["inode"]
-        assert os.stat(testfilerenamed1).st_ino == self.get_registry_entry_by_path(
-            os.path.abspath(testfilerenamed1))["FileStateOS"]["inode"]
+        assert os.stat(testfile).st_ino == self.get_registry_entry_by_path(os.path.abspath(testfile))["FileStateOS"]["inode"]
+        assert os.stat(testfilerenamed1).st_ino == self.get_registry_entry_by_path(os.path.abspath(testfilerenamed1))["FileStateOS"]["inode"]
 
         # Rotate log file, create a new empty one and remove it afterwards
         testfilerenamed2 = self.working_dir + "/log/input.2"
@@ -306,14 +303,12 @@ class Test(BaseTest):
         data = self.get_registry()
 
         # Compare file inodes and the one in the registry
-        assert os.stat(testfile).st_ino == self.get_registry_entry_by_path(
-            os.path.abspath(testfile))["FileStateOS"]["inode"]
-        assert os.stat(testfilerenamed1).st_ino == self.get_registry_entry_by_path(
-            os.path.abspath(testfilerenamed1))["FileStateOS"]["inode"]
+        assert os.stat(testfile).st_ino == self.get_registry_entry_by_path(os.path.abspath(testfile))["FileStateOS"]["inode"]
+        assert os.stat(testfilerenamed1).st_ino == self.get_registry_entry_by_path(os.path.abspath(testfilerenamed1))["FileStateOS"]["inode"]
 
-        # Check that 3 files are part of the registrar file. The deleted file
-        # should never have been detected, but the rotated one should be in
+        # Check that 3 files are part of the registrar file. The deleted file should never have been detected, but the rotated one should be in
         assert len(data) == 3
+
 
     def test_restart_continue(self):
         """
@@ -342,8 +337,7 @@ class Test(BaseTest):
         # Wait a momemt to make sure registry is completely written
         time.sleep(1)
 
-        assert os.stat(testfile).st_ino == self.get_registry_entry_by_path(
-            os.path.abspath(testfile))["FileStateOS"]["inode"]
+        assert os.stat(testfile).st_ino == self.get_registry_entry_by_path(os.path.abspath(testfile))["FileStateOS"]["inode"]
 
         filebeat.check_kill_and_wait()
 
@@ -370,8 +364,7 @@ class Test(BaseTest):
         data = self.get_registry()
 
         # Compare file inodes and the one in the registry
-        assert os.stat(testfile).st_ino == self.get_registry_entry_by_path(
-            os.path.abspath(testfile))["FileStateOS"]["inode"]
+        assert os.stat(testfile).st_ino == self.get_registry_entry_by_path(os.path.abspath(testfile))["FileStateOS"]["inode"]
 
         # Check that 1 files are part of the registrar file. The deleted file should never have been detected
         assert len(data) == 1
@@ -381,6 +374,7 @@ class Test(BaseTest):
         # Check that output file has the same number of lines as the log file
         assert 1 == len(output)
         assert output[0]["message"] == "entry2"
+
 
     def test_rotating_file_with_restart(self):
         """
@@ -411,8 +405,7 @@ class Test(BaseTest):
         time.sleep(1)
 
         data = self.get_registry()
-        assert os.stat(testfile).st_ino == self.get_registry_entry_by_path(
-            os.path.abspath(testfile))["FileStateOS"]["inode"]
+        assert os.stat(testfile).st_ino == self.get_registry_entry_by_path(os.path.abspath(testfile))["FileStateOS"]["inode"]
 
         testfilerenamed1 = self.working_dir + "/log/input.1"
         os.rename(testfile, testfilerenamed1)
@@ -435,10 +428,8 @@ class Test(BaseTest):
 
         data = self.get_registry()
 
-        assert os.stat(testfile).st_ino == self.get_registry_entry_by_path(
-            os.path.abspath(testfile))["FileStateOS"]["inode"]
-        assert os.stat(testfilerenamed1).st_ino == self.get_registry_entry_by_path(
-            os.path.abspath(testfilerenamed1))["FileStateOS"]["inode"]
+        assert os.stat(testfile).st_ino == self.get_registry_entry_by_path(os.path.abspath(testfile))["FileStateOS"]["inode"]
+        assert os.stat(testfilerenamed1).st_ino == self.get_registry_entry_by_path(os.path.abspath(testfilerenamed1))["FileStateOS"]["inode"]
 
         filebeat.check_kill_and_wait()
 
@@ -474,13 +465,10 @@ class Test(BaseTest):
         data = self.get_registry()
 
         # Compare file inodes and the one in the registry
-        assert os.stat(testfile).st_ino == self.get_registry_entry_by_path(
-            os.path.abspath(testfile))["FileStateOS"]["inode"]
-        assert os.stat(testfilerenamed1).st_ino == self.get_registry_entry_by_path(
-            os.path.abspath(testfilerenamed1))["FileStateOS"]["inode"]
+        assert os.stat(testfile).st_ino == self.get_registry_entry_by_path(os.path.abspath(testfile))["FileStateOS"]["inode"]
+        assert os.stat(testfilerenamed1).st_ino == self.get_registry_entry_by_path(os.path.abspath(testfilerenamed1))["FileStateOS"]["inode"]
 
-        # Check that 3 files are part of the registrar file. The deleted file
-        # should never have been detected, but the rotated one should be in
+        # Check that 3 files are part of the registrar file. The deleted file should never have been detected, but the rotated one should be in
         assert len(data) == 3
 
     def test_state_after_rotation(self):
@@ -557,6 +545,7 @@ class Test(BaseTest):
             assert self.get_registry_entry_by_path(os.path.abspath(testfile1))["offset"] == 9
             assert self.get_registry_entry_by_path(os.path.abspath(testfile2))["offset"] == 8
 
+
     def test_state_after_rotation_ignore_older(self):
         """
         Checks that the state is written correctly after rotation and ignore older
@@ -567,6 +556,7 @@ class Test(BaseTest):
             scan_frequency="1s",
             close_inactive="1s"
         )
+
 
         os.mkdir(self.working_dir + "/log/")
         testfile1 = self.working_dir + "/log/input"
@@ -580,7 +570,7 @@ class Test(BaseTest):
             f.write("entry0\n")
 
         # Change modification time so file extends ignore_older
-        yesterday = time.time() - 3600 * 24
+        yesterday = time.time() - 3600*24
         os.utime(testfile2, (yesterday, yesterday))
 
         filebeat = self.start_beat()
@@ -706,6 +696,7 @@ class Test(BaseTest):
             assert data[0]["offset"] == 3
         else:
             assert data[0]["offset"] == 2
+
 
     def test_clean_removed(self):
         """
@@ -986,6 +977,7 @@ class Test(BaseTest):
 
         filebeat.check_kill_and_wait()
 
+
     def test_restart_state_reset(self):
         """
         Test that ttl is set to -1 after restart and no prospector covering it
@@ -1017,7 +1009,7 @@ class Test(BaseTest):
         assert len(data) == 1
         assert data[0]["ttl"] > 0
 
-        # No config file which does not match the existing state
+        # No config file which does not match the exisitng state
         self.render_config_template(
             path=os.path.abspath(self.working_dir) + "/log/test2.log",
             clean_inactive="10s",
@@ -1062,10 +1054,6 @@ class Test(BaseTest):
             lambda: self.output_has(lines=1),
             max_timeout=30)
 
-        self.wait_until(
-            lambda: self.log_contains("Registry file updated. 1 states written.",
-                                      logfile="filebeat.log"), max_timeout=10)
-
         filebeat.check_kill_and_wait()
 
         # Check that ttl > 0 was set because of clean_inactive
@@ -1077,7 +1065,7 @@ class Test(BaseTest):
         self.render_config_template(
             path=os.path.abspath(self.working_dir) + "/log/test.log",
             clean_inactive="40s",
-            ignore_older="20s",
+            ignore_older="5s",
         )
 
         filebeat = self.start_beat(output="filebeat2.log")
@@ -1086,11 +1074,7 @@ class Test(BaseTest):
 
         self.wait_until(
             lambda: self.log_contains("Flushing spooler because of timeout. Events flushed: ",
-                                      logfile="filebeat2.log"), max_timeout=10)
-
-        self.wait_until(
-            lambda: self.log_contains("Registry file updated",
-                                      logfile="filebeat2.log"), max_timeout=10)
+            logfile="filebeat2.log"), max_timeout=10)
 
         filebeat.check_kill_and_wait()
 
@@ -1124,10 +1108,6 @@ class Test(BaseTest):
             lambda: self.output_has(lines=1),
             max_timeout=30)
 
-        self.wait_until(
-            lambda: self.log_contains("Registry file updated. 1 states written.",
-                                      logfile="filebeat.log"), max_timeout=10)
-
         filebeat.check_kill_and_wait()
 
         # Check that ttl > 0 was set because of clean_inactive
@@ -1135,7 +1115,7 @@ class Test(BaseTest):
         assert len(data) == 1
         assert data[0]["ttl"] == 20 * 1000 * 1000 * 1000
 
-        # new config file with other clean_inactive
+        # new config file whith other clean_inactive
         self.render_config_template(
             path=os.path.abspath(self.working_dir) + "/log/test file.log",
             clean_inactive="40s",
@@ -1149,16 +1129,13 @@ class Test(BaseTest):
             lambda: self.log_contains("Flushing spooler because of timeout. Events flushed: ", logfile="filebeat2.log"),
             max_timeout=10)
 
-        self.wait_until(
-            lambda: self.log_contains("Registry file updated",
-                                      logfile="filebeat2.log"), max_timeout=10)
-
         filebeat.check_kill_and_wait()
 
         # Check that ttl was reset correctly
         data = self.get_registry()
         assert len(data) == 1
         assert data[0]["ttl"] == 40 * 1000 * 1000 * 1000
+
 
     def test_restart_state_reset_ttl_no_clean_inactive(self):
         """
@@ -1202,10 +1179,6 @@ class Test(BaseTest):
         self.wait_until(
             lambda: self.log_contains("Flushing spooler because of timeout. Events flushed: ", logfile="filebeat2.log"),
             max_timeout=10)
-
-        self.wait_until(
-            lambda: self.log_contains("Registry file updated",
-                                      logfile="filebeat2.log"), max_timeout=10)
 
         filebeat.check_kill_and_wait()
 

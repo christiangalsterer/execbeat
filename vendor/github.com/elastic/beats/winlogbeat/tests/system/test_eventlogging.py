@@ -13,7 +13,6 @@ Contains tests for reading from the Event Logging API (pre MS Vista).
 
 @unittest.skipUnless(sys.platform.startswith("win"), "requires Windows")
 class Test(WriteReadTest):
-
     @classmethod
     def setUpClass(self):
         self.api = "eventlogging"

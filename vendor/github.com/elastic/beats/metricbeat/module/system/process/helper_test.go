@@ -4,12 +4,9 @@
 package process
 
 import (
-	"os"
-	"runtime"
 	"testing"
 	"time"
 
-	"github.com/elastic/beats/libbeat/common"
 	"github.com/elastic/gosigar"
 	"github.com/stretchr/testify/assert"
 )
@@ -25,41 +22,47 @@ func TestPids(t *testing.T) {
 }
 
 func TestGetProcess(t *testing.T) {
-	process, err := newProcess(os.Getpid(), "", nil)
-	if err != nil {
-		t.Fatal(err)
-	}
-	if err = process.getDetails(nil); err != nil {
-		t.Fatal(err)
-	}
+	pids, err := Pids()
 
-	assert.True(t, (process.Pid > 0))
-	assert.True(t, (process.Ppid >= 0))
-	assert.True(t, (process.Pgid >= 0))
-	assert.True(t, (len(process.Name) > 0))
-	assert.True(t, (len(process.Username) > 0))
-	assert.NotEqual(t, "unknown", process.State)
+	assert.Nil(t, err)
 
-	// Memory Checks
-	assert.True(t, (process.Mem.Size >= 0))
-	assert.True(t, (process.Mem.Resident >= 0))
-	assert.True(t, (process.Mem.Share >= 0))
+	for _, pid := range pids {
 
-	// CPU Checks
-	assert.True(t, (process.Cpu.StartTime > 0))
-	assert.True(t, (process.Cpu.Total >= 0))
-	assert.True(t, (process.Cpu.User >= 0))
-	assert.True(t, (process.Cpu.Sys >= 0))
+		process, err := newProcess(pid)
+		if err != nil {
+			continue
+		}
+		err = process.getDetails("")
+		assert.NoError(t, err)
+		assert.NotNil(t, process)
 
-	assert.True(t, (process.Ctime.Unix() <= time.Now().Unix()))
+		assert.True(t, (process.Pid > 0))
+		assert.True(t, (process.Ppid >= 0))
+		assert.True(t, (process.Pgid >= 0))
+		assert.True(t, (len(process.Name) > 0))
+		assert.True(t, (len(process.Username) > 0))
+		assert.NotEqual(t, "unknown", process.State)
 
-	switch runtime.GOOS {
-	case "darwin", "linux", "freebsd":
-		assert.True(t, len(process.Env) > 0, "empty environment")
+		// Memory Checks
+		assert.True(t, (process.Mem.Size >= 0))
+		assert.True(t, (process.Mem.Resident >= 0))
+		assert.True(t, (process.Mem.Share >= 0))
+
+		// CPU Checks
+		assert.True(t, (process.Cpu.StartTime > 0))
+		assert.True(t, (process.Cpu.Total >= 0))
+		assert.True(t, (process.Cpu.User >= 0))
+		assert.True(t, (process.Cpu.Sys >= 0))
+
+		assert.True(t, (process.Ctime.Unix() <= time.Now().Unix()))
+
+		// it's enough to get valid data for a single process
+		break
 	}
 }
 
 func TestProcState(t *testing.T) {
+
 	assert.Equal(t, getProcState('R'), "running")
 	assert.Equal(t, getProcState('S'), "sleeping")
 	assert.Equal(t, getProcState('s'), "unknown")
@@ -69,6 +72,7 @@ func TestProcState(t *testing.T) {
 }
 
 func TestMatchProcs(t *testing.T) {
+
 	var procStats = ProcStats{}
 
 	procStats.Procs = []string{".*"}
@@ -90,6 +94,7 @@ func TestMatchProcs(t *testing.T) {
 }
 
 func TestProcMemPercentage(t *testing.T) {
+
 	procStats := ProcStats{}
 
 	p := Process{
@@ -108,6 +113,7 @@ func TestProcMemPercentage(t *testing.T) {
 }
 
 func TestProcCpuPercentage(t *testing.T) {
+
 	procStats := ProcStats{}
 
 	ctime := time.Now()
@@ -140,7 +146,7 @@ func TestProcCpuPercentage(t *testing.T) {
 }
 
 // BenchmarkGetProcess runs a benchmark of the GetProcess method with caching
-// of the command line and environment variables.
+// of the command line arguments enabled.
 func BenchmarkGetProcess(b *testing.B) {
 	pids, err := Pids()
 	if err != nil {
@@ -154,17 +160,15 @@ func BenchmarkGetProcess(b *testing.B) {
 		pid := pids[i%nPids]
 
 		var cmdline string
-		var env common.MapStr
 		if p := procs[pid]; p != nil {
 			cmdline = p.CmdLine
-			env = p.Env
 		}
 
-		process, err := newProcess(pid, cmdline, env)
+		process, err := newProcess(pid)
 		if err != nil {
 			continue
 		}
-		err = process.getDetails(nil)
+		err = process.getDetails(cmdline)
 		assert.NoError(b, err)
 
 		procs[pid] = process

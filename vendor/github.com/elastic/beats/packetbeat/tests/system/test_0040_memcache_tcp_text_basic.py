@@ -11,7 +11,6 @@ from packetbeat import BaseTest
 
 
 class Test(BaseTest):
-
     def _run(self, pcap):
         self.render_config_template()
         self.run_packetbeat(pcap=pcap,

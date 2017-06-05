@@ -89,11 +89,6 @@ func newBaseModuleFromConfig(rawConfig *common.Config) (BaseModule, error) {
 		return baseModule, err
 	}
 
-	// If timeout is not set, timeout is set to the same value as period
-	if baseModule.config.Timeout == 0 {
-		baseModule.config.Timeout = baseModule.config.Period
-	}
-
 	baseModule.name = strings.ToLower(baseModule.config.Module)
 
 	err = mustNotContainDuplicates(baseModule.config.Hosts)

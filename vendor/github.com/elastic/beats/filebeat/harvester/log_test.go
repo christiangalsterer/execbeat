@@ -69,6 +69,7 @@ func TestReadLine(t *testing.T) {
 		},
 		file: f,
 	}
+	assert.NotNil(t, h)
 
 	var ok bool
 	h.encodingFactory, ok = encoding.FindEncoding(h.config.Encoding)
@@ -103,29 +104,35 @@ func TestReadLine(t *testing.T) {
 }
 
 func TestExcludeLine(t *testing.T) {
-	regexp, err := InitMatchers("^DBG")
+
+	regexp, err := InitRegexps([]string{"^DBG"})
+
 	assert.Nil(t, err)
-	assert.True(t, MatchAny(regexp, "DBG: a debug message"))
-	assert.False(t, MatchAny(regexp, "ERR: an error message"))
+
+	assert.True(t, MatchAnyRegexps(regexp, "DBG: a debug message"))
+	assert.False(t, MatchAnyRegexps(regexp, "ERR: an error message"))
 }
 
 func TestIncludeLine(t *testing.T) {
-	regexp, err := InitMatchers("^ERR", "^WARN")
+
+	regexp, err := InitRegexps([]string{"^ERR", "^WARN"})
 
 	assert.Nil(t, err)
-	assert.False(t, MatchAny(regexp, "DBG: a debug message"))
-	assert.True(t, MatchAny(regexp, "ERR: an error message"))
-	assert.True(t, MatchAny(regexp, "WARNING: a simple warning message"))
+
+	assert.False(t, MatchAnyRegexps(regexp, "DBG: a debug message"))
+	assert.True(t, MatchAnyRegexps(regexp, "ERR: an error message"))
+	assert.True(t, MatchAnyRegexps(regexp, "WARNING: a simple warning message"))
 }
 
 func TestInitRegexp(t *testing.T) {
-	_, err := InitMatchers("(((((")
+
+	_, err := InitRegexps([]string{"((((("})
 	assert.NotNil(t, err)
 }
 
 // readLine reads a full line into buffer and returns it.
 // In case of partial lines, readLine does return an error and an empty string
-// This could potentially be improved / replaced by https://github.com/elastic/beats/libbeat/tree/master/common/streambuf
+// This could potentialy be improved / replaced by https://github.com/elastic/beats/libbeat/tree/master/common/streambuf
 func readLine(reader reader.Reader) (time.Time, string, int, common.MapStr, error) {
 	message, err := reader.Next()
 
