@@ -127,7 +127,7 @@ This will fetch and create all images required for the build process. The comple
 
 # Releases
 
-## 3.2.0 (2017-06-05) [Download](https://github.com/christiangalsterer/execbeat/releases/tag/3.2.2)
+## 3.2.0 (2017-06-05) [Download](https://github.com/christiangalsterer/execbeat/releases/tag/3.2.0)
 [![Github Releases (by Release)](https://img.shields.io/github/downloads/christiangalsterer/execbeat/3.2.0/total.svg)](https://github.com/christiangalsterer/execneat/releases/tag/3.2.0)
 
 Feature and bugfix release containing the following changes:
