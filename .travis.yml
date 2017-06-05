@@ -37,6 +37,7 @@ before_install:
   - mkdir -p $HOME/gopath/src/github.com/christiangalsterer/execbeat
   - rsync -az ${TRAVIS_BUILD_DIR}/ $HOME/gopath/src/github.com/christiangalsterer/execbeat/
   - export TRAVIS_BUILD_DIR=$HOME/gopath/src/github.com/christiangalsterer/execbeat
+  - chmod -R go-w $HOME/gopath/src/github.com/christiangalsterer/execbeat
   - cd $HOME/gopath/src/github.com/christiangalsterer/execbeat
 
   # Update to most recent docker version
