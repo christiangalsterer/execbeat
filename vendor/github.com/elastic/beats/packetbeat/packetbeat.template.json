@@ -5,8 +5,9 @@
         "norms": false
       },
       "_meta": {
-        "version": "5.2.1"
+        "version": "5.4.1"
       },
+      "date_detection": false,
       "dynamic_templates": [
         {
           "strings_as_keyword": {
@@ -27,6 +28,9 @@
             "app-id": {
               "ignore_above": 1024,
               "type": "keyword"
+            },
+            "arguments": {
+              "properties": {}
             },
             "auto-delete": {
               "type": "boolean"
@@ -77,6 +81,9 @@
             "expiration": {
               "ignore_above": 1024,
               "type": "keyword"
+            },
+            "headers": {
+              "properties": {}
             },
             "if-empty": {
               "type": "boolean"
@@ -494,6 +501,9 @@
                     }
                   }
                 },
+                "supported": {
+                  "properties": {}
+                },
                 "warnings": {
                   "ignore_above": 1024,
                   "type": "keyword"
@@ -748,6 +758,9 @@
         "domloadtime": {
           "type": "long"
         },
+        "fields": {
+          "properties": {}
+        },
         "final": {
           "ignore_above": 1024,
           "type": "keyword"
@@ -764,6 +777,9 @@
                   "norms": false,
                   "type": "text"
                 },
+                "headers": {
+                  "properties": {}
+                },
                 "params": {
                   "ignore_above": 1024,
                   "type": "keyword"
@@ -779,6 +795,9 @@
                 "code": {
                   "ignore_above": 1024,
                   "type": "keyword"
+                },
+                "headers": {
+                  "properties": {}
                 },
                 "phrase": {
                   "ignore_above": 1024,
@@ -878,6 +897,9 @@
                 "initial": {
                   "type": "long"
                 },
+                "keys": {
+                  "properties": {}
+                },
                 "line": {
                   "ignore_above": 1024,
                   "type": "keyword"
@@ -912,6 +934,9 @@
                   "ignore_above": 1024,
                   "type": "keyword"
                 },
+                "values": {
+                  "properties": {}
+                },
                 "vbucket": {
                   "type": "long"
                 },
@@ -942,6 +967,9 @@
                 "flags": {
                   "type": "long"
                 },
+                "keys": {
+                  "properties": {}
+                },
                 "opaque": {
                   "type": "long"
                 },
@@ -951,6 +979,9 @@
                 },
                 "opcode_value": {
                   "type": "long"
+                },
+                "stats": {
+                  "properties": {}
                 },
                 "status": {
                   "ignore_above": 1024,
@@ -965,6 +996,9 @@
                 },
                 "value": {
                   "type": "long"
+                },
+                "values": {
+                  "properties": {}
                 },
                 "version": {
                   "ignore_above": 1024,

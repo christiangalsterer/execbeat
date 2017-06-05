@@ -7,8 +7,9 @@
         }
       },
       "_meta": {
-        "version": "5.2.1"
+        "version": "5.4.1"
       },
+      "date_detection": false,
       "dynamic_templates": [
         {
           "strings_as_keyword": {
@@ -67,6 +68,9 @@
               "type": "string"
             }
           }
+        },
+        "fields": {
+          "properties": {}
         },
         "meta": {
           "properties": {

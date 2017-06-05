@@ -93,6 +93,8 @@ func (e *Executor) runOneTime() error {
 		}
 	}
 
+	logp.Info("Execbeat", "Executing command: [%v]", stdout.String())
+
 	commandEvent := Exec{
 		Command:  cmdName,
 		StdOut:   stdout.String(),

@@ -127,8 +127,15 @@ This will fetch and create all images required for the build process. The comple
 
 # Releases
 
+## 3.2.0 (WiP) [Download](https://github.com/christiangalsterer/execbeat/releases/tag/3.2.2)
+[![Github Releases (by Release)](https://img.shields.io/github/downloads/christiangalsterer/execbeat/3.2.0/total.svg)](https://github.com/christiangalsterer/execneat/releases/tag/3.2.0)
+
+Feature and bugfix release containing the following changes:
+* Fix: [Use exit code 127 when command to execute is not found](https://github.com/christiangalsterer/execbeat/issues/15)
+* Update to beats v5.4.1
+
 ## 3.1.1 (2017-02-24) [Download](https://github.com/christiangalsterer/execbeat/releases/tag/3.1.1)
-[![Github Releases (by Release)](https://img.shields.io/github/downloads/christiangalsterer/execbeat/3.1.1/total.svg)](https://github.com/christiangalsterer/execneat/releases/tag/3.1.1)
+[![Github Releases (by Release)](https://img.shields.io/github/downloads/christiangalsterer/execbeat/3.1.1/total.svg)](https://g0thub.com/christiangalsterer/execneat/releases/tag/3.1.1)
 
 Bugfix release containing the following changes:
 * [Set correct version in package names and package metadata](https://github.com/christiangalsterer/execbeat/issues/10)

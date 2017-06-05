@@ -5,8 +5,9 @@
         "norms": false
       },
       "_meta": {
-        "version": "5.2.1"
+        "version": "5.4.1"
       },
+      "date_detection": false,
       "dynamic_templates": [
         {
           "strings_as_keyword": {
@@ -46,8 +47,14 @@
           "ignore_above": 1024,
           "type": "keyword"
         },
+        "event_data": {
+          "properties": {}
+        },
         "event_id": {
           "type": "long"
+        },
+        "fields": {
+          "properties": {}
         },
         "keywords": {
           "ignore_above": 1024,
@@ -158,6 +165,9 @@
               "type": "keyword"
             }
           }
+        },
+        "user_data": {
+          "properties": {}
         },
         "version": {
           "type": "long"

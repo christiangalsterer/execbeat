@@ -6,6 +6,7 @@ import subprocess
 
 
 class Test(BaseTest):
+
     def test_base(self):
         """
         Basic test with exiting Mockbeat normally
@@ -71,6 +72,8 @@ class Test(BaseTest):
         with open(self.working_dir + "/mockbeat.template.json", "w") as f:
             f.write('{"template": true}')
         with open(self.working_dir + "/mockbeat.template-es2x.json", "w") as f:
+            f.write('{"template": true}')
+        with open(self.working_dir + "/mockbeat.template-es6x.json", "w") as f:
             f.write('{"template": true}')
 
         exit_code = self.run_beat(
