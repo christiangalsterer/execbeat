@@ -16,7 +16,6 @@ env:
   matrix:
     - TARGETS="ci"
     - TARGETS="crosscompile"
-    - TARGETS="package"
 
   global:
     # Cross-compile for amd64 only to speed up testing.
