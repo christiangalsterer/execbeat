@@ -11,11 +11,11 @@ type ExecbeatConfig struct {
 }
 
 type ExecConfig struct {
-	Schedule     string
-	Command      string
-	Args         string
-	DocumentType string            `config:"document_type"`
-	Fields       map[string]string `config:"fields"`
+	Schedule     string	`yaml:"schedule"`
+	Command      string	`yaml:"command"`
+	Args         string	`yaml:"args"`
+	DocumentType string            `config:"document_type" yaml:"document_type`
+	Fields       map[string]string `config:"fields" yaml:"fields"`
 }
 
 type ConfigSettings struct {

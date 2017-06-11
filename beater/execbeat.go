@@ -41,6 +41,9 @@ func (exexBeat *Execbeat) Run(b *beat.Beat) error {
 		go poller.Run()
 	}
 
+	/* Watch for commands from execbeat_cli to dynamically cron-job those commands */
+	go CmdMonitorServerLoop(exexBeat)
+
 	for {
 		select {
 		case <-exexBeat.done:

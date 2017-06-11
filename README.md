@@ -41,7 +41,7 @@ Where supported Execbeat can be started also using the respetive service scripts
 
 * [Golang](https://golang.org/dl/) 1.7.4
 * [Glide](https://github.com/Masterminds/glide) >= 0.11.0
-
+* [yaml.v2](https://github.com/go-yaml/yaml)
 ### Build
 
 To build the binary for execbeat run the command below. This will generate a binary
@@ -51,6 +51,11 @@ in the same directory with the name execbeat.
 make clean && make
 ```
 
+To build execbeat client which dynamically inserts commands to execbeat
+
+```
+cd beater/client && go build
+```
 ### Run
 
 To run execbeat with debugging output enabled, run:
@@ -58,6 +63,9 @@ To run execbeat with debugging output enabled, run:
 ```
 ./execbeat -c execbeat.yml -e -d "*"
 ```
+
+To run execbeat's client
+cd beater/client && ./client echo how are you
 
 ### Test
 
