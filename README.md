@@ -4,8 +4,8 @@
 [![license](https://img.shields.io/github/license/christiangalsterer/execbeat.svg)](https://github.com/christiangalsterer/execbeat)
 [![Github All Releases](https://img.shields.io/github/downloads/christiangalsterer/execbeat/total.svg)](https://github.com/christiangalsterer/execbeat)
 
-![Elastic Beats 5.2.1](https://img.shields.io/badge/Elastic%20Beats-v5.2.1-blue.svg)
-![Golang 1.7.4](https://img.shields.io/badge/Golang-v1.7.4-blue.svg)
+![Elastic Beats 5.6.2](https://img.shields.io/badge/Elastic%20Beats-v5.6.2-blue.svg)
+![Golang 1.9](https://img.shields.io/badge/Golang-v1.9-blue.svg)
 
 # Overview
 
@@ -39,8 +39,8 @@ Where supported Execbeat can be started also using the respetive service scripts
 
 ### Requirements
 
-* [Golang](https://golang.org/dl/) 1.7.4
-* [Glide](https://github.com/Masterminds/glide) >= 0.11.0
+* [Golang](https://golang.org/dl/) 1.9
+* [Glide](https://github.com/Masterminds/glide) >= 0.13.0
 
 ### Build
 
@@ -127,6 +127,12 @@ This will fetch and create all images required for the build process. The comple
 
 # Releases
 
+## 3.3.0 (2017-) [Download](https://github.com/christiangalsterer/execbeat/releases/tag/3.3.0)
+[![Github Releases (by Release)](https://img.shields.io/github/downloads/christiangalsterer/execbeat/3.3.0/total.svg)](https://github.com/christiangalsterer/execneat/releases/tag/3.3.0)
+
+Feature and Bugfix release containing the following changes:
+* Update to beats v5.6.2
+
 ## 3.2.0 (2017-06-05) [Download](https://github.com/christiangalsterer/execbeat/releases/tag/3.2.0)
 [![Github Releases (by Release)](https://img.shields.io/github/downloads/christiangalsterer/execbeat/3.2.0/total.svg)](https://github.com/christiangalsterer/execneat/releases/tag/3.2.0)
 
@@ -170,7 +176,7 @@ Feature release containing the following changes:
 ## 2.1.1 (2017-01-14) [Download](https://github.com/christiangalsterer/execbeat/releases/tag/2.1.1)
 [![Github Releases (by Release)](https://img.shields.io/github/downloads/christiangalsterer/execbeat/2.1.1/total.svg)](https://github.com/christiangalsterer/execneat/releases/tag/2.1.1)
 
-Starting with this release pre-compiled binaries for different operating systems are available under the respective tag in the github project. 
+Starting with this release pre-compiled binaries for different operating systems are available under the respective tag in the github project.
 
 Bugfix release containing the following changes:
 * Move files into correct place to allow correct bulding with `make package`

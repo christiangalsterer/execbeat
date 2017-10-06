@@ -1,7 +1,6 @@
-BEATNAME=execbeat
 BEAT_NAME=execbeat
 BEAT_DESCRIPTION=Execute commands in a regular interval and the standard output and standard error is shipped to the configured output channel.
-BEAT_DIR=github.com/christiangalsterer/execbeat
+BEAT_PATH=github.com/christiangalsterer/execbeat
 SYSTEM_TESTS=false
 TEST_ENVIRONMENT=false
 SNAPSHOT=no
@@ -16,7 +15,7 @@ PREFIX?=.
 # Update dependencies
 .PHONY: getdeps
 getdeps:
-	glide up --strip-vcs --update-vendored
+	glide up
 
 # Initial beat setup
 .PHONY: setup
