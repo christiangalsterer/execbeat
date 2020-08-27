@@ -1,12 +1,13 @@
 package main
 
 import (
-	execbeat "github.com/christiangalsterer/execbeat/beater"
-	"github.com/elastic/beats/libbeat/beat"
 	"os"
+
+	"github.com/elastic/beats/libbeat/beat"
+	execbeat "github.com/sonnylaskar/execbeat/beater"
 )
 
-var version = "3.3.0"
+var version = "3.3.2"
 var name = "execbeat"
 
 func main() {

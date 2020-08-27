@@ -7,18 +7,27 @@ execbeat:
     # Each - Commands to execute.
     -
       # Optional cron expression, defines when to execute the command.
-      # Default is every 1 minute.
+      # If schedule not mentioned, command will run only once
       #schedule:
 
       # The command to execute by Execbeat
       command: echo
 
       # Optional arguments to be passed to the command to execute
-      args: "Hello World"
+      args: "Will Run only once"
+
+      # Name given to command to distinguish between two similar commands for different contexts
+      name: "echoOnce"
 
       # Type to be published in the 'type' field. For Elasticsearch output,
       # the type defines the document type these entries should be stored
       # in. Default: execbeat
+      document_type: execbeat
+    -
+      command: echo
+      schedule: "* * * * * *"
+      args: "Will run every second"
+      name: "echoPeriod"
       document_type: execbeat
 
 #================================ General ======================================

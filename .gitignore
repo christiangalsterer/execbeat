@@ -3,3 +3,4 @@ logs
 build
 .idea
 .DS_Store
+dist

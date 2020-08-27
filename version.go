@@ -1,3 +1,3 @@
 package main
 
-const appVersion = "3.3.0"
+const appVersion = "3.3.2"
