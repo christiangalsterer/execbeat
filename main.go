@@ -1,17 +1,15 @@
 package main
 
 import (
-	execbeat "github.com/christiangalsterer/execbeat/beater"
-	"github.com/elastic/beats/libbeat/beat"
 	"os"
+
+	"github.com/christiangalsterer/execbeat/cmd"
+
+	_ "github.com/christiangalsterer/execbeat/include"
 )
 
-var version = "3.3.0"
-var name = "execbeat"
-
 func main() {
-	err := beat.Run(name, version, execbeat.New)
-	if err != nil {
+	if err := cmd.RootCmd.Execute(); err != nil {
 		os.Exit(1)
 	}
 }

@@ -1,23 +1,35 @@
+// Config is put into a different package to prevent cyclic imports in case
+// it is needed in several locations
+
 package config
 
-// Defaults for config variables which are not set
-const (
-	DefaultSchedule     string = "@every 1m"
-	DefaultDocumentType string = "execbeat"
+import (
+	"time"
+
+	"github.com/elastic/beats/v7/libbeat/common"
 )
 
-type ExecbeatConfig struct {
-	Commands []ExecConfig
+// Config for this beat
+type Config struct {
+	Commands []*common.Config `config:"commands"`
+	Period   time.Duration    `config:"period"`
+	Command  string           `config:"command"`
 }
 
-type ExecConfig struct {
-	Schedule     string
-	Command      string
-	Args         string
-	DocumentType string            `config:"document_type"`
-	Fields       map[string]string `config:"fields"`
-}
+// DefaultConfig for this beat
+var DefaultConfig = defaultConfig()
 
-type ConfigSettings struct {
-	Execbeat ExecbeatConfig
+func defaultConfig() Config {
+	defaultCommandConfig := map[string]interface{}{
+		"period":  "10s",
+		"command": "date",
+	}
+	commandConfigs := []*common.Config{}
+	if config, err := common.NewConfigFrom(defaultCommandConfig); err == nil {
+		commandConfigs = append(commandConfigs, config)
+	}
+
+	return Config{
+		Commands: commandConfigs,
+	}
 }

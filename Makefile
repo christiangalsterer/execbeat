@@ -1,40 +1,20 @@
 BEAT_NAME=execbeat
-BEAT_DESCRIPTION=Execute commands in a regular interval and the standard output and standard error is shipped to the configured output channel.
 BEAT_PATH=github.com/christiangalsterer/execbeat
+BEAT_GOPATH=$(firstword $(subst :, ,${GOPATH}))
 SYSTEM_TESTS=false
 TEST_ENVIRONMENT=false
-SNAPSHOT=no
-ES_BEATS?=./vendor/github.com/elastic/beats
-# GOPACKAGES=$(shell glide novendor)
-GOPACKAGES=$(shell go list ${BEAT_DIR}/... | grep -v /vendor/)
-PREFIX?=.
+ES_BEATS_IMPORT_PATH=github.com/elastic/beats/v7
+ES_BEATS?=$(shell go list -m -f '{{.Dir}}' ${ES_BEATS_IMPORT_PATH})
+LIBBEAT_MAKEFILE=$(ES_BEATS)/libbeat/scripts/Makefile
+GOPACKAGES=$(shell go list ${BEAT_PATH}/... | grep -v /tools)
+GOBUILD_FLAGS=-i -ldflags "-X ${ES_BEATS_IMPORT_PATH}/libbeat/version.buildTime=$(NOW) -X ${ES_BEATS_IMPORT_PATH}/libbeat/version.commit=$(COMMIT_ID)"
+MAGE_IMPORT_PATH=github.com/magefile/mage
+NO_COLLECT=true
+CHECK_HEADERS_DISABLED=true
 
 # Path to the libbeat Makefile
--include $(ES_BEATS)/libbeat/scripts/Makefile
+-include $(LIBBEAT_MAKEFILE)
 
-# Update dependencies
-.PHONY: getdeps
-getdeps:
-	glide up
-
-# Initial beat setup
-.PHONY: setup
-setup: copy-vendor
-	make update
-
-# Copy beats into vendor directory
 .PHONY: copy-vendor
 copy-vendor:
-	mkdir -p vendor/github.com/elastic/
-	cp -R ${GOPATH}/src/github.com/elastic/beats vendor/github.com/elastic/
-	rm -rf vendor/github.com/elastic/beats/.git
-
-# This is called by the beats packer before building starts
-.PHONY: before-build
-before-build:
-
-.PHONY: cover
-cover:
-	echo 'mode: atomic' > coverage.txt && go list . ./beater | xargs -n1 -I{} sh -c 'go test -covermode=atomic -coverprofile=coverage.tmp {} && tail -n +2 coverage.tmp >> coverage.txt' && rm coverage.tmp
-
-.PHONY: collect
+	mage vendorUpdate

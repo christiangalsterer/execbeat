@@ -1,26 +1,9 @@
 - key: execbeat
   title: execbeat
-  description: Contains information about the command execution.
+  description:
   fields:
-    - name: exec
-      type: group
-      fields:
-        - name: command
-          type: keyword
-          description: >
-            The command executed by Execbeat.
-
-        - name: stdout
-          type: keyword
-          description: >
-            Standard output produced by the command executed by Execbeat.
-
-        - name: stderr
-          type: keyword
-          description: >
-            Standard error produced by the command executed by Execbeat.
-
-        - name: exitCode
-          type: keyword
-          description: >
-            Exit code of the command executed by Execbeat.
+    - name: counter
+      type: long
+      required: true
+      description: >
+        PLEASE UPDATE DOCUMENTATION
