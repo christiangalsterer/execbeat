@@ -1,5 +1,5 @@
 execbeat
-Copyright {year} Christian Galsterer
+Copyright 2015 Christian Galsterer
 
 This product includes software developed by The Apache Software
 Foundation (http://www.apache.org/).
