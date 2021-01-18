@@ -11,7 +11,7 @@ import (
 var Name = "execbeat"
 
 // Version of this beat
-var Version = "3.4.0"
+var Version = "5.0.0-SNAPSHOT"
 
 // RootCmd to handle beats cli
 var RootCmd = cmd.GenRootCmdWithSettings(beater.New, instance.Settings{Name: Name, Version: Version})
